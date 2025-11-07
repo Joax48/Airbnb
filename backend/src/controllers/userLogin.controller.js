@@ -2,11 +2,23 @@ import bcrypt from "bcrypt";
 import { pool } from "../config/db.js";
 import dotenv from "dotenv";
 dotenv.config();
-//import yub from "yub";
 
 import { generateToken } from "../middleware/jwt.auth.js";
 
-//const yubico = yub.init(process.env.YUBI_CLIENT_ID, process.env.YUBI_SECRET_KEY);
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+
+const yub = require("yub");
+yub.init(process.env.YUBI_CLIENT_ID, process.env.YUBI_SECRET_KEY);
+
+const verifyYubiOtp = (otp) => {
+    return new Promise((resolve, reject) => {
+        yub.verify(otp, (err, data) => {
+            if (err) return reject(err);
+            resolve(data);
+        });
+    });
+};
 
 export const LogIn = async (req, res) => {
     const { email, password, otp } = req.body;
@@ -17,15 +29,17 @@ export const LogIn = async (req, res) => {
     try {
         const userData = await findUserByUsername(email);
         // Validates with password
-        var result = await bcrypt.compare(password, userData.password_hash);
-        if (!result) {
+        var validPass = await bcrypt.compare(password, userData.password_hash);
+        if (!validPass) {
             return res.status(401).json( { message: "Contraseña incorrecta" } );
         }
         // Validates with yubikey
-        // result = await yubico.verify(otp);
-        // if (!result.valid || result.publicId !== userData.yubikeypublicid) {
-        //     return res.status(401).json( { message: "Invalid Yubikey 2FA OTP" } );
-        // }
+        const result = await verifyYubiOtp(otp);
+
+        if (!result.valid || result.otp.substring(0, 12) !== userData.yubikey_public_id) {
+            return res.status(401).json({ message: "Yubikey 2FA OTP inválido" });
+        }
+
         const token = generateToken(userData)
         return res.status(200).json({ jwt: token })
     } catch (error) {
