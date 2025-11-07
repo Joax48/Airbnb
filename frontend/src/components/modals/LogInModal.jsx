@@ -42,7 +42,7 @@ const LogInModal = ({ onClose }) => {
             }
         } catch (error) {
             setIsSuccess(false);
-            setMessage("Error en el servidor");
+            setMessage(error.message);
         } finally {
             setLoading(false);
         }
