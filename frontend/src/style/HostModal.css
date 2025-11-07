@@ -1,0 +1,85 @@
+.host-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.host-modal {
+  background: white;
+  border-radius: 16px;
+  padding: 30px 40px;
+  width: 420px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.host-modal h2 {
+  margin-bottom: 25px;
+  font-size: 22px;
+  color: #333;
+}
+
+.host-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.host-option {
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  cursor: pointer;
+  background: #fafafa;
+  font-size: 16px;
+  transition: all 0.2s ease;
+}
+
+.host-option:hover {
+  background: #ffeef2;
+  border-color: #ff385c;
+}
+
+.host-option.selected {
+  background: #ff385c;
+  color: white;
+  border-color: #ff385c;
+}
+
+.next-btn-container {
+  text-align: left;
+}
+
+.next-btn {
+  background: #ff385c;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+
+.next-btn:hover {
+  background: #e03151;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+}

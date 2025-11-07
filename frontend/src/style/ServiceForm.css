@@ -1,0 +1,104 @@
+.basic-form {
+  background: #fff;
+  padding: 30px 40px;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  margin: 40px auto;
+  font-family: "Poppins", sans-serif;
+}
+
+.basic-form h2 {
+  color: #ff385c;
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 22px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: #333;
+  font-size: 15px;
+}
+
+.basic-form input,
+.basic-form textarea {
+  border: 1.8px solid #ddd;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 15px;
+  outline: none;
+  transition: all 0.2s ease;
+  background-color: #fafafa;
+}
+
+.basic-form input:focus,
+.basic-form textarea:focus {
+  border-color: #ff385c;
+  background-color: #fff;
+  box-shadow: 0 0 3px rgba(255, 56, 92, 0.3);
+}
+
+.basic-form textarea {
+  resize: none;
+}
+
+.create-btn {
+  width: 100%;
+  background-color: #ff385c;
+  color: white;
+  border: none;
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s ease;
+}
+
+.create-btn:hover {
+  background-color: #e03151;
+}
+
+.create-btn:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+}
+
+.basic-form input::placeholder,
+.basic-form textarea::placeholder {
+  color: #999;
+}
+
+.select-input {
+  border: 1.8px solid #ddd;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 15px;
+  outline: none;
+  transition: all 0.2s ease;
+  background-color: #fafafa;
+  color: #333;
+}
+
+.select-input:focus {
+  border-color: #ff385c;
+  background-color: #fff;
+  box-shadow: 0 0 3px rgba(255, 56, 92, 0.3);
+}
+
+.select-input optgroup {
+  color: #555;
+  font-weight: 600;
+}
+
+.select-input option {
+  color: #333;
+}

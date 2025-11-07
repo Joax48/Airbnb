@@ -1,0 +1,64 @@
+.carousel-section {
+  margin-bottom: 40px;
+}
+
+.carousel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  margin-bottom: 10px;
+}
+
+.carousel-header h2 {
+  font-size: 20px;
+}
+
+.view-more {
+  text-decoration: none;
+  color: #ff385c;
+  font-weight: 500;
+}
+
+.carousel-container {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  gap: 20px;
+  padding: 0 20px;
+}
+
+.carousel-card {
+  min-width: 250px;
+  background-color: white;
+  border-radius: 14px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.carousel-card:hover {
+  transform: translateY(-5px);
+}
+
+.carousel-card img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+}
+
+.card-info {
+  padding: 10px;
+}
+
+.price {
+  color: #333;
+  font-weight: 600;
+}
+
+.no-results {
+  padding: 10px 20px;
+  color: #777;
+}

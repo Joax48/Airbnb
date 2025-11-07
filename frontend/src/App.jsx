@@ -1,34 +1,35 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter as Router, Route, Routes, useLocation  } from 'react-router-dom';
 
+// Punblic Pages
+import Home from './pages/Home/Home.jsx'
+
+// LogIn
+import LogInPage from './pages/LogIn/LogIn.jsx';
+
+// Resources
+import AccommodationsPage from './pages/Resources/Property.jsx'
+import ActivitiesPage from './pages/Resources/Activity.jsx'
+import ServicesPage from './pages/Resources/Service.jsx'
+
+// Utils
+import NotFound from './pages/Extras/NotFound.jsx'
 function App() {
-  const [count, setCount] = useState(0)
+
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <Router>
+      <Routes>
+          <Route path="/" element={<Home />} />
+
+          <Route path="/properties/create" element={<AccommodationsPage />} />
+          <Route path="/activities/create" element={<ActivitiesPage />} />
+          <Route path="/services/create" element={<ServicesPage />} />
+          <Route path="/LogIn" element={<LogInPage/>} />
+          
+          <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Router>
   )
 }
 

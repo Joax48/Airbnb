@@ -1,0 +1,54 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background:#f7f7f7;
+  padding: 15px 40px;
+  border-bottom: 1px solid #eee;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo {
+  font-size: 22px;
+  color: #ff385c;
+  font-weight: 700;
+}
+
+.nav-center a {
+  margin: 0 10px;
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+}
+
+.nav-center a:hover {
+  color: #ff385c;
+}
+
+.nav-right button {
+  margin-left: 10px;
+  border: none;
+  cursor: pointer;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.host-btn {
+  background: #ff385c;
+  color: white;
+}
+
+.host-btn:hover {
+  background: #e03151;
+}
+
+.login-btn {
+  background: #f7f7f7;
+  border: 1px solid #ddd;
+}
+.login-btn:hover {
+  background: #e7e7e7;
+}
