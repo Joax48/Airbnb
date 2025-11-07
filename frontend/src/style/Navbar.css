@@ -2,59 +2,53 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background:#f7f7f7;
   padding: 15px 40px;
-  background-color: white;
   border-bottom: 1px solid #eee;
   position: sticky;
   top: 0;
-  z-index: 1000;
+  z-index: 100;
 }
 
 .logo {
-  height: 40px;
-  margin-right: 20px;
+  font-size: 22px;
+  color: #ff385c;
+  font-weight: 700;
 }
 
-.navbar-left {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.navbar-left ul {
-  display: flex;
-  list-style: none;
-  gap: 25px;
-  margin-left: 15vw;
-}
-
-.navbar-left a {
+.nav-center a {
+  margin: 0 10px;
   text-decoration: none;
   color: #333;
   font-weight: 500;
 }
 
-.navbar-right {
-  display: flex;
-  align-items: center;
-  gap: 20px;
+.nav-center a:hover {
+  color: #ff385c;
 }
 
-.host-link {
-  color: #333;
-  text-decoration: none;
+.nav-right button {
+  margin-left: 10px;
+  border: none;
+  cursor: pointer;
+  padding: 8px 14px;
+  border-radius: 8px;
   font-weight: 500;
+}
+
+.host-btn {
+  background: #ff385c;
+  color: white;
+}
+
+.host-btn:hover {
+  background: #e03151;
 }
 
 .login-btn {
-  background-color: #ff385c;
-  color: white;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 20px;
-  font-weight: 600;
-  cursor: pointer;
+  background: #f7f7f7;
+  border: 1px solid #ddd;
 }
 .login-btn:hover {
-  background-color: #e33152;
+  background: #e7e7e7;
 }

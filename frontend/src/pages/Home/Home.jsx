@@ -3,6 +3,7 @@ import axios from "axios";
 import Navbar from "../../components/Navbar";
 import SearchBar from "../../components/SearchBar";
 import SectionCarousel from "../../components/SectionCarousel";
+import Container from "../../components/Container";
 import "../../style/HomePage.css";
 
 const Home = () => {
@@ -38,22 +39,21 @@ const Home = () => {
     fetchProperties();
   }, []);
 
-  // Agrupar por tipo (ejemplo)
   const casas = filtered.filter((p) => p.type.toLowerCase() === "casa");
   const apartamentos = filtered.filter((p) => p.type.toLowerCase() === "apartamento");
   const cabañas = filtered.filter((p) => p.type.toLowerCase() === "cabaña");
 
   return (
-    <>
-      <Navbar />
-      <div className="home-container">
-        <SearchBar onSearch={handleSearch} />
+      <>
+    <Navbar />
+    <Container>
+      <SearchBar onSearch={handleSearch} />
+      <SectionCarousel title="Casas destacadas" items={casas} />
+      <SectionCarousel title="Apartamentos recomendados" items={apartamentos} />
+      <SectionCarousel title="Cabañas populares" items={cabañas} />
+    </Container>
+  </>
 
-        <SectionCarousel title="Casas destacadas" items={casas} />
-        <SectionCarousel title="Apartamentos recomendados" items={apartamentos} />
-        <SectionCarousel title="Cabañas populares" items={cabañas} />
-      </div>
-    </>
   );
 };
 

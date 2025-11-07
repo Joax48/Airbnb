@@ -4,8 +4,9 @@ import helmet from "helmet";
 import morgan from "morgan";
 import "./config/db.js";
 
-import propertyRoutes from "./routes/property.routes.js";
-import activityRoutes from "./routes/activity.routes.js";
+import propertyRoutes from "./routes/property.js";
+import activityRoutes from "./routes/activity.js";
+import serviceRoutes from "./routes/service.js";
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(morgan("dev"));
 
 app.use("/api/properties", propertyRoutes);
 app.use("/api/activities", activityRoutes);
+app.use("/api/services", serviceRoutes);
 
 app.get("/", (req, res) => {
   res.send("API SecureBNB funcionando correctamente");
