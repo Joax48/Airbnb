@@ -1,0 +1,17 @@
+import React, { useEffect, useState } from "react";
+import { getRegisteredUsers } from "../../api/client";
+
+export default function Users() {
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    getRegisteredUsers().then(r => setUsers(r.data || []));
+  }, []);
+
+  return (
+    <>
+      <h1>Usuarios registrados</h1>
+      <pre>{JSON.stringify(users, null, 2)}</pre>
+    </>
+  );
+}
