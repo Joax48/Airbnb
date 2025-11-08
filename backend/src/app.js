@@ -10,6 +10,8 @@ import serviceRoutes from "./routes/service.js";
 import userRoutes from "./routes/user.routes.js";
 import jwtAuthRoutes from "./routes/jwtAuth.routes.js";
 
+import passwordHahingRoutes from "./routes/passwordHashing.routes.js";
+
 const app = express();
 
 app.use(helmet());
@@ -22,6 +24,8 @@ app.use("/api/activities", activityRoutes);
 app.use("/api/services", serviceRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/jwt/", jwtAuthRoutes);
+
+app.use("/api/pass/", passwordHahingRoutes);
 
 app.get("/", (req, res) => {
   res.send("API SecureBNB funcionando correctamente");
