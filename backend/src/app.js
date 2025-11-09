@@ -9,13 +9,18 @@ import activityRoutes from "./routes/activity.js";
 import serviceRoutes from "./routes/service.js";
 import userRoutes from "./routes/user.routes.js";
 import jwtAuthRoutes from "./routes/jwtAuth.routes.js";
+import cookieParser from "cookie-parser";
+
 
 const app = express();
 
 app.use(helmet());
-app.use(cors({ origin: "http://localhost:5173" }));
+app.use(cors({ origin: "http://localhost:5173",
+credentials: true 
+}));
 app.use(express.json());
 app.use(morgan("dev"));
+app.use(cookieParser());
 
 app.use("/api/properties", propertyRoutes);
 app.use("/api/activities", activityRoutes);
