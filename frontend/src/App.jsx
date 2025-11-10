@@ -12,49 +12,52 @@ import ActivitiesPage from './pages/Resources/Activity.jsx'
 import ServicesPage from './pages/Resources/Service.jsx'
 
 // Admin
-import { AuthProvider } from "./auth/AuthContext";
-import AdminRoute from "./routes/AdminRoute";
-import AdminLayout from "./layouts/AdminLayout";
-import Dashboard from "./pages/admin/Dashboard";
-import Approvals from "./pages/admin/Approvals";
-import Users from "./pages/admin/Users";
-import Logs from "./pages/admin/Logs";
+import AdminLayout from "./layouts/AdminLayout.jsx";
+import DashboardPage from "./pages/admin/Dashboard.jsx";
+import ApprovalsPage from "./pages/admin/Approvals.jsx";
+import UsersPage from "./pages/admin/Users.jsx";
+import LogsPage from "./pages/admin/Logs.jsx";
 
 // Utils
 import NotFound from './pages/Extras/NotFound.jsx'
+import ProtectedRoute from './utils/ProtectedRoute.jsx';
+import { AdminRoute } from './utils/AdminRoute.jsx';
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <Routes>
-          {/* Públicas */}
-          <Route path="/" element={<Home />} />
-          <Route path="/properties/create" element={<AccommodationsPage />} />
-          <Route path="/activities/create" element={<ActivitiesPage />} />
-          <Route path="/services/create" element={<ServicesPage />} />
-          <Route path="/LogIn" element={<LogInPage />} />
+    <Router>
+      <Routes>
+        {/* Públicas */}
+        <Route path="/" element={<Home />} />
 
-          {/* Admin protegidas */}
-          <Route
-            path="/admin"
-            element={
-              <AdminRoute>
-                <AdminLayout />
-              </AdminRoute>
-            }
-          >
-            <Route index element={<Dashboard />} />
-            <Route path="approvals" element={<Approvals />} />
-            <Route path="users" element={<Users />} />
-            <Route path="logs" element={<Logs />} />
-          </Route>
+        {/* Solo usuarios logueados */}
+        <Route path="/properties/create"element={<ProtectedRoute><AccommodationsPage /></ProtectedRoute>}/>
+        <Route path="/activities/create"element={<ProtectedRoute><ActivitiesPage/></ProtectedRoute>}/>
+        <Route path="/services/create"element={<ProtectedRoute><ServicesPage/></ProtectedRoute>}/>
+        <Route path="/LogIn"element={<ProtectedRoute><LogInPage/></ProtectedRoute>}/>
 
-          {/* 404 */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Router>
-    </AuthProvider>
+        <Route path="/unauthorized" element={<h2>No tienes permisos para acceder aquí</h2>} />
+
+        {/* Admin protegidas */}
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <AdminLayout />
+            </AdminRoute>
+          }
+        >
+          <Route index element={<DashboardPage />} />
+          <Route path="approvals" element={<ApprovalsPage />} />
+          <Route path="users" element={<UsersPage />} />
+          <Route path="logs" element={<LogsPage />} />
+        </Route>
+
+        {/* 404 */}
+        <Route path="*" element={<NotFound />} />
+
+      </Routes>
+    </Router>
   )
 }
 

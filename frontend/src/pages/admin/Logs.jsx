@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getAuditLogs } from "../../api/client";
 
-export default function Logs() {
+export default function LogsPage() {
   const [logs, setLogs] = useState([]);
 
   useEffect(() => {

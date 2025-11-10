@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getRegisteredUsers } from "../../api/client";
 
-export default function Users() {
+export default function UsersPage() {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {

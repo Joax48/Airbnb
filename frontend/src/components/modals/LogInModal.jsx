@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import "../../style/LogInModal.css";
 import axios from "axios";
 
+axios.defaults.withCredentials = true;
+
 const LogInModal = ({ onClose }) => {
     const [form, setForm] = useState({
         email: "",
@@ -30,7 +32,7 @@ const LogInModal = ({ onClose }) => {
         }
 
         try {
-            const res = await axios.post("http://localhost:4000/api/users/Login", form);
+            const res = await axios.post("http://localhost:4000/api/users/Login", form, { withCredentials: true });
             
             if (res.status !== 200) {
                 setIsSuccess(false);
@@ -38,7 +40,7 @@ const LogInModal = ({ onClose }) => {
             } else {
                 setIsSuccess(true);
                 setMessage("Inicio de sesión exitoso");
-                setTimeout( () => { onClose() }, 2500);
+                setTimeout( () => { onClose() ; window.location.reload();}, 2500);
             }
         } catch (error) {
             setIsSuccess(false);
