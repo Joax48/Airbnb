@@ -1,17 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { getRegisteredUsers } from "../../api/apiClient.js";
+import React from 'react';
 
 export default function UsersPage() {
-  const [users, setUsers] = useState([]);
-
-  useEffect(() => {
-    getRegisteredUsers().then(r => setUsers(r.data || []));
-  }, []);
-
-  return (
-    <>
-      <h1>Usuarios registrados</h1>
-      <pre>{JSON.stringify(users, null, 2)}</pre>
-    </>
-  );
+  return <h1>Usuarios</h1>;
 }

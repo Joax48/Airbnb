@@ -1,0 +1,113 @@
+:root {
+  --admin-bg: #f6f7f9;
+  --admin-surface: #ffffff;
+  --admin-text: #333;
+  --admin-muted: #6b7280;
+  --admin-border: #ddd;
+  --admin-primary: #ff385c;
+  --admin-primary-hover: #e03151;
+  --admin-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --admin-radius: 12px;
+  --admin-input-bg: #fff;
+  --admin-input-border: var(--admin-border);
+  --admin-input-focus: var(--admin-primary);
+}
+
+.card {
+  border: 1px solid var(--admin-border);
+  border-radius: var(--admin-radius);
+  padding: 16px;
+  background: var(--admin-surface);
+  box-shadow: var(--admin-shadow);
+  color: var(--admin-text);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+  border-bottom: 1px solid var(--admin-border);
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+
+.title {
+  margin: 0 0 8px 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--admin-text);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.meta {
+  margin: 4px 0 8px 0;
+  color: var(--admin-muted);
+  font-size: 0.9rem;
+}
+
+.property-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 10px 0 12px;
+  padding: 8px 10px;
+  background: var(--admin-bg);
+  border-radius: var(--admin-radius);
+  border: 1px solid var(--admin-border);
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9rem;
+  color: var(--admin-text);
+  background: var(--admin-surface);
+  padding: 6px 10px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  transition: background 0.2s ease;
+}
+
+.info-item:hover {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.icon {
+  color: var(--admin-muted);
+  stroke-width: 1.8;
+}
+
+.description {
+  margin-top: 8px;
+  white-space: pre-wrap;
+  line-height: 1.5;
+  color: var(--admin-text);
+}
+
+@media (max-width: 600px) {
+  .card {
+    padding: 12px;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .actions {
+    margin-top: 8px;
+  }
+}

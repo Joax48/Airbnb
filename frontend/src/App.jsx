@@ -29,12 +29,13 @@ function App() {
       <Routes>
         {/* Públicas */}
         <Route path="/" element={<Home />} />
+        <Route path="/Login"element={<LogInPage/>}/>        
 
         {/* Solo usuarios logueados */}
         <Route path="/properties/create"element={<ProtectedRoute><AccommodationsPage /></ProtectedRoute>}/>
         <Route path="/activities/create"element={<ProtectedRoute><ActivitiesPage/></ProtectedRoute>}/>
         <Route path="/services/create"element={<ProtectedRoute><ServicesPage/></ProtectedRoute>}/>
-        <Route path="/LogIn"element={<ProtectedRoute><LogInPage/></ProtectedRoute>}/>
+
 
         <Route path="/unauthorized" element={<h2>No tienes permisos para acceder aquí</h2>} />
 

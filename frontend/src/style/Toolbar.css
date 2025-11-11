@@ -1,0 +1,64 @@
+:root {
+  --admin-bg: #f6f7f9;
+  --admin-surface: #ffffff;
+  --admin-text: #333;
+  --admin-muted: #6b7280;
+  --admin-border: #ddd;
+  --admin-primary: #ff385c;
+  --admin-primary-hover: #e03151;
+  --admin-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --admin-radius: 12px;
+  --admin-input-bg: #fff;
+  --admin-input-border: var(--admin-border);
+  --admin-input-focus: var(--admin-primary);
+}
+
+.toolbar {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 16px;
+  background: var(--admin-surface);
+  padding: 8px 12px;
+  border-radius: var(--admin-radius);
+  box-shadow: var(--admin-shadow);
+}
+
+.input {
+  flex: 1;
+  max-width: 320px;
+  padding: 8px 12px;
+  border: 1px solid var(--admin-input-border);
+  background: var(--admin-input-bg);
+  color: var(--admin-text);
+  border-radius: var(--admin-radius);
+  font-size: 14px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--admin-input-focus);
+  box-shadow: 0 0 0 2px rgba(255, 56, 92, 0.2);
+}
+
+.reload-btn {
+  padding: 8px 14px;
+  border: 1px solid var(--admin-input-border);
+  background: var(--admin-primary);
+  color: #fff;
+  border-radius: var(--admin-radius);
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.reload-btn:hover:not(:disabled) {
+  background: var(--admin-primary-hover);
+  transform: translateY(-1px);
+}
+
+.reload-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
