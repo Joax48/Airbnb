@@ -3,9 +3,6 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 // Punblic Pages
 import Home from './pages/Home/Home.jsx'
 
-// LogIn
-import LogInPage from './pages/LogIn/LogIn.jsx';
-
 // Resources
 import AccommodationsPage from './pages/Resources/Property.jsx'
 import ActivitiesPage from './pages/Resources/Activity.jsx'
@@ -27,7 +24,6 @@ function App() {
           <Route path="/properties/create"element={<ProtectedRoute><AccommodationsPage /></ProtectedRoute>}/>
           <Route path="/activities/create"element={<ProtectedRoute><ActivitiesPage/></ProtectedRoute>}/>
           <Route path="/services/create"element={<ProtectedRoute><ServicesPage/></ProtectedRoute>}/>
-          <Route path="/LogIn"element={<ProtectedRoute><LogInPage/></ProtectedRoute>}/>
 
           <Route path="/unauthorized" element={<h2>No tienes permisos para acceder aquí</h2>} />
           <Route path="*" element={<NotFound />} />
