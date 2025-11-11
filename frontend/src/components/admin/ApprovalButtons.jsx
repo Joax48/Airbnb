@@ -44,7 +44,7 @@ export default function ApprovalButtons({ id, onApprove, onReject }) {
         <div className="modal-backdrop" role="dialog" aria-modal="true">
           <div className="modal">
             <h4 className="modal-title">Motivo de rechazo</h4>
-            <p className="modal-hint">(Debe contener al menos 3 caracteres.)</p>
+            <p className="modal-hint">Debe contener al menos 3 caracteres.</p>
             <textarea
               className="text-area"
               value={reason}

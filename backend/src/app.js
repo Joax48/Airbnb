@@ -12,7 +12,6 @@ import jwtAuthRoutes from "./routes/jwtAuth.routes.js";
 import approvalRoutes from "./routes/approval.routes.js";
 import cookieParser from "cookie-parser";
 
-
 const app = express();
 
 app.use(helmet());

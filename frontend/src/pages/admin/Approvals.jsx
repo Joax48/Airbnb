@@ -1,74 +1,62 @@
-import { useEffect, useMemo, useState } from 'react';
 import { Inbox } from 'lucide-react';
+import { Home, CalendarClock, Wrench } from 'lucide-react';
+import useApprovals from '../../hooks/useApprovals';
 import PendingPropertyCard from '../../components/admin/PendingPropertyCard.jsx';
+import PendingActivityCard from '../../components/admin/PendingActivityCard.jsx';
+import PendingServiceCard from '../../components/admin/PendingServiceCard.jsx';
 import Toolbar from '../../components/admin/Toolbar.jsx';
 import "../../style/Approvals.css";
 
+const TABS = [
+  { key: 'properties', label: 'Alojamientos', Icon: Home, tone: 'properties' },
+  { key: 'activities', label: 'Actividades', Icon: CalendarClock, tone: 'activities' },
+  { key: 'services',  label: 'Servicios',   Icon: Wrench, tone: 'services' },
+];
+
 export default function ApprovalsPage() {
-  const [rows, setRows] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [err, setErr] = useState(null);
-  const [q, setQ] = useState('');
-  const [refreshKey, setRefreshKey] = useState(0);
-
-  useEffect(() => {
-    let alive = true;
-    setLoading(true);
-    fetch('/api/admin/approval/properties/pending', { credentials: 'include' })
-      .then(async (r) => {
-        const ct = r.headers.get('content-type') || '';
-        const body = ct.includes('application/json') ? await r.json() : await r.text();
-        if (!r.ok) throw new Error(typeof body === 'string' ? `HTTP ${r.status}` : (body?.message || `HTTP ${r.status}`));
-
-        const list = Array.isArray(body)
-          ? body
-          : (body?.data ?? body?.rows ?? body?.properties ?? body?.pending ?? body?.items ?? []);
-
-        if (alive) { setRows(Array.isArray(list) ? list : []); setErr(null); }
-      })
-      .catch(e => alive && setErr(e.message || String(e)))
-      .finally(() => alive && setLoading(false));
-    return () => { alive = false; };
-  }, [refreshKey]);
-
-  const filtered = useMemo(() => {
-    const s = q.trim().toLowerCase();
-    if (!s) return rows;
-    return rows.filter(p =>
-      String(p?.name || p?.title || '').toLowerCase().includes(s) ||
-      String(p?.id_property || '').toLowerCase().includes(s)
-    );
-  }, [rows, q]);
-
-  const approve = async (id) => {
-    await fetch(`/api/admin/approval/properties/${id}/approve`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-    });
-    setRefreshKey(k => k + 1);
-  };
-
-  const reject = async (id, reason) => {
-    await fetch(`/api/admin/approval/properties/${id}/reject`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ reason }),
-    });
-    setRefreshKey(k => k + 1);
-  };
+  const {
+    active, setActive,
+    filtered, counts,
+    q, setQ, loading, err, refresh,
+    approve, reject,
+  } = useApprovals();
 
   return (
     <div style={{ maxWidth: 980, margin: '0 auto', padding: 24 }}>
       <h1 style={{ marginBottom: 16 }}>Aprobaciones</h1>
 
+      <div className="tabs">
+        {TABS.map(t => {
+          const isActive = active === t.key;
+          const CIcon = t.Icon;
+          const count = counts[t.key] || 0;
+          return (
+            <button
+              key={t.key}
+              className={`tab-btn tone-${t.tone} ${isActive ? 'active' : ''}`}
+              onClick={() => setActive(t.key)}
+              aria-current={isActive ? 'page' : undefined}
+            >
+              <span className="tab-icon" aria-hidden="true"><CIcon size={16} /></span>
+              <span className="tab-label">{t.label}</span>
+              <span className="tab-count" aria-label={`${count} pendientes`}>{count}</span>
+            </button>
+          );
+        })}
+      </div>
+
       <Toolbar
         filter={q}
         onFilterChange={setQ}
-        onReload={() => setRefreshKey(k => k + 1)}
+        onReload={refresh}
         loading={loading}
       />
+
+      {err && (
+        <div className="error" role="alert" style={{ margin: '12px 0', color: 'var(--danger, #c1121f)' }}>
+          {String(err)}
+        </div>
+      )}
 
       {!loading && !err && filtered.length === 0 && (
         <div className="empty-state">
@@ -76,25 +64,41 @@ export default function ApprovalsPage() {
             <Inbox className="empty-icon" size={28} aria-hidden="true" />
           </div>
           <h3 className="empty-title">Estás al día por ahora</h3>
-          <p className="empty-text">
-            Aquí se mostrarán las propiedades que requieran revisión.
-          </p>
+          <p className="empty-text">Aquí se mostrarán los ítems que requieran revisión.</p>
         </div>
       )}
 
       <div style={{ display: 'grid', gap: 16 }}>
-        {filtered.map((p, i) => (
-        <PendingPropertyCard
-          key={p?.id_property ?? i}
-          property={p}
-          onApprove={approve}
-          onReject={(id, reason) => {
-            const r = (reason ?? '').trim();
-            if (r.length < 3) return alert('Motivo muy corto (mín. 3).');
-            reject(id, r);
-          }}
-        />
-        ))}
+        {filtered.map((item, i) => {
+          if ('id_property' in (item || {})) {
+            return (
+              <PendingPropertyCard
+                key={item?.id_property ?? i}
+                property={item}
+                onApprove={() => approve(item)}
+                onReject={(_id, r) => r?.trim()?.length >= 3 && reject(item, r)}
+              />
+            );
+          }
+          if ('id_activity' in (item || {})) {
+            return (
+              <PendingActivityCard
+                key={item?.id_activity ?? i}
+                activity={item}
+                onApprove={() => approve(item)}
+                onReject={(_id, r) => r?.trim()?.length >= 3 && reject(item, r)}
+              />
+            );
+          }
+          return (
+            <PendingServiceCard
+              key={item?.id_service ?? i}
+              service={item}
+              onApprove={() => approve(item)}
+              onReject={(_id, r) => r?.trim()?.length >= 3 && reject(item, r)}
+            />
+          );
+        })}
       </div>
     </div>
   );

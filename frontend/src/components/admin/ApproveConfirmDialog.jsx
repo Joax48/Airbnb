@@ -4,8 +4,8 @@ import "../../style/ApprovalButtons.css";
 
 export default function ApproveConfirmDialog({
   open,
-  title = "Aprobar alojamiento",
-  message = "¿Estás seguro de que deseas aprobar este alojamiento? Esta acción lo hará visible para los usuarios.",
+  title = "Aprobar propiedad",
+  message = "¿Estás seguro de que deseas aprobar esta propiedad? Esta acción la hará visible para los usuarios.",
   confirmText = "Aprobar",
   cancelText = "Cancelar",
   onConfirm,

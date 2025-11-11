@@ -1,5 +1,5 @@
 import ApprovalButtons from "./ApprovalButtons";
-import "../../style/PendingPropertyCard.css";
+import "../../style/PendingCard.css";
 import { Home, MapPin, DollarSign } from "lucide-react";
 
 export default function PendingPropertyCard({ property, onApprove, onReject }) {
@@ -17,9 +17,12 @@ export default function PendingPropertyCard({ property, onApprove, onReject }) {
   return (
     <article className="card">
       <div className="header">
-        <h3 className="title">
-          #{id_property} · {name || 'Alojamiento'}
-        </h3>
+        <div>
+          <h3 className="title">#{id_property} · {name || 'Alojamiento'}</h3>
+          <div className="meta">
+            Pendiente de revisión
+          </div>
+        </div>  
         <div className="actions">
           <ApprovalButtons id={id_property} onApprove={onApprove} onReject={onReject} />
         </div>
