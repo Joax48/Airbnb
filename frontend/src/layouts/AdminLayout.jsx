@@ -1,16 +1,30 @@
-import React, { useContext } from "react";
 import { NavLink, Outlet } from "react-router-dom";
-import { AuthContext } from "../auth/AuthContext";
+import { useAuth } from "../hooks/useAuth.js";
+import BackButton from "../components/BackButton.jsx";
 import "../style/AdminLayout.css";
 
 export default function AdminLayout() {
-  const { logout, role } = useContext(AuthContext);
+  const { logout, user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="admin-layout">
+        <main className="admin-main">
+          <p>Cargando…</p>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="admin-layout">
       <aside className="admin-sidebar">
+        <BackButton />
         <header>
-          <h2 className="admin-sidebar-title">Panel de control</h2>
+          <h2 className="admin-sidebar-title">Administrador</h2>
+          <span className="admin-badge">
+            {user?.email || ""}
+          </span>
         </header>
 
         <nav className="admin-nav">

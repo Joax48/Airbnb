@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { getPendingContent } from "../../api/client";
+import { getPendingContent } from "../../api/apiClient";
 
-export default function ApprovalsPage() {
+export default function Approvals() {
   const [data, setData] = useState({ lodgings: [], activities: [], services: [] });
 
   useEffect(() => {

@@ -9,6 +9,7 @@ import activityRoutes from "./routes/activity.js";
 import serviceRoutes from "./routes/service.js";
 import userRoutes from "./routes/user.routes.js";
 import jwtAuthRoutes from "./routes/jwtAuth.routes.js";
+import approvalRoutes from "./routes/approval.routes.js";
 import cookieParser from "cookie-parser";
 
 
@@ -27,6 +28,7 @@ app.use("/api/activities", activityRoutes);
 app.use("/api/services", serviceRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/jwt/", jwtAuthRoutes);
+app.use("/api/admin/approval", approvalRoutes);
 
 app.get("/", (req, res) => {
   res.send("API SecureBNB funcionando correctamente");

@@ -4,6 +4,7 @@ import HostModal from "./Modals/HostModal";
 import LogInModal from "./Modals/LogInModal";
 import Container from "./Container";
 import { useAuth } from "../hooks/useAuth";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [showHostModal, setShowHostModal] = useState(false);
@@ -72,7 +73,9 @@ const Navbar = () => {
                       {user?.email || ""}
                     </p>
                     {user?.role === "admin" && (
-                      <p className="dropdown-item admin">Panel Admin</p>
+                      <Link to="/admin" className="dropdown-item admin">
+                        Ir a panel de administración
+                      </Link>
                     )}
                     <hr />
                     <button

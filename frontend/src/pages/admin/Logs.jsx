@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getAuditLogs } from "../../api/client";
+import { getAuditLogs } from "../../api/apiClient.js";
 
 export default function LogsPage() {
   const [logs, setLogs] = useState([]);

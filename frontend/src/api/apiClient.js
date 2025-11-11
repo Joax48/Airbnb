@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:4000";
 
 export async function validateSession(token) {
   return Promise.resolve({ ok: !!token, role: getRoleFromToken(token) });

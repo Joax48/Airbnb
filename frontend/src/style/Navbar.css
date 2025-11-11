@@ -86,6 +86,11 @@
   font-weight: bold;
 }
 
+.user-dropdown .dropdown-item {
+  text-decoration: none;
+  color: inherit;
+}
+
 .user-dropdown {
   position: absolute;
   top: 42px;
