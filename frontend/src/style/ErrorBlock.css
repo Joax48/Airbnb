@@ -1,0 +1,10 @@
+.error-block {
+  margin: 12px 0;
+  padding: 12px 16px;
+  border-radius: var(--admin-radius);
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fee2e2;
+  box-shadow: var(--admin-shadow);
+  font-size: 0.95rem;
+}
