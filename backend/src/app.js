@@ -10,6 +10,7 @@ import serviceRoutes from "./routes/service.js";
 import userRoutes from "./routes/user.routes.js";
 import jwtAuthRoutes from "./routes/jwtAuth.routes.js";
 import approvalRoutes from "./routes/approval.routes.js";
+import adminUserRoutes from "./routes/admin.users.routes.js";
 import cookieParser from "cookie-parser";
 
 const app = express();
@@ -28,6 +29,7 @@ app.use("/api/services", serviceRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/jwt/", jwtAuthRoutes);
 app.use("/api/admin/approval", approvalRoutes);
+app.use("/api/admin", adminUserRoutes);
 
 app.get("/", (req, res) => {
   res.send("API SecureBNB funcionando correctamente");
