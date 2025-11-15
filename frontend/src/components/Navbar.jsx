@@ -3,6 +3,7 @@ import "../style/Navbar.css";
 import HostModal from "./Modals/HostModal";
 import LogInModal from "./Modals/LogInModal";
 import Container from "./Container";
+import { Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { Link } from "react-router-dom";
 
@@ -37,7 +38,7 @@ const Navbar = () => {
       <Container>
         <nav className="navbar">
           <div className="nav-left">
-            <h1 className="logo">SecureBNB</h1>
+            <a href="/" className="logo">SecureBNB</a>
           </div>
 
           <div className="nav-center">
@@ -77,7 +78,12 @@ const Navbar = () => {
                         Ir a panel de administración
                       </Link>
                     )}
+                    <Link to="/saved" className="dropdown-item">
+                      Mis guardados
+                    </Link>
                     <hr />
+
+
                     <button
                       className="dropdown-item logout"
                       onClick={() => {

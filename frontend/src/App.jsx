@@ -3,9 +3,6 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 // Public Pages
 import Home from './pages/Home/Home.jsx'
 
-// LogIn
-import LogInPage from './pages/LogIn/LogIn.jsx';
-
 // Resources
 import AccommodationsPage from './pages/Resources/Property.jsx'
 import ActivitiesPage from './pages/Resources/Activity.jsx'
@@ -17,6 +14,13 @@ import DashboardPage from "./pages/admin/Dashboard.jsx";
 import ApprovalsPage from "./pages/admin/Approvals.jsx";
 import UsersPage from "./pages/admin/Users.jsx";
 import LogsPage from "./pages/admin/Logs.jsx";
+
+import PropertyDetail from "./pages/Resources/PropertyDetail";
+import ServiceDetail from "./pages/Resources/ServiceDetail";
+import ActivityDetail from "./pages/Resources/ActivityDetail";
+
+// User Pages
+import SavedPage from './pages/User/saved.jsx'
 
 // Utils
 import NotFound from './pages/Extras/NotFound.jsx'
@@ -31,10 +35,15 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/Login"element={<LogInPage/>}/>        
 
-        {/* Solo usuarios logueados */}
-        <Route path="/properties/create"element={<ProtectedRoute><AccommodationsPage /></ProtectedRoute>}/>
-        <Route path="/activities/create"element={<ProtectedRoute><ActivitiesPage/></ProtectedRoute>}/>
-        <Route path="/services/create"element={<ProtectedRoute><ServicesPage/></ProtectedRoute>}/>
+          {/* Solo usuarios logueados */}
+          <Route path="/properties/create"element={<ProtectedRoute><AccommodationsPage /></ProtectedRoute>}/>
+          <Route path="/activities/create"element={<ProtectedRoute><ActivitiesPage/></ProtectedRoute>}/>
+          <Route path="/services/create"element={<ProtectedRoute><ServicesPage/></ProtectedRoute>}/>
+          <Route path="/LogIn"element={<ProtectedRoute><LogInPage/></ProtectedRoute>}/>
+          <Route path="/saved" element={<ProtectedRoute><SavedPage/></ProtectedRoute>} />
+            <Route path="/properties/:id" element={<PropertyDetail/>} />
+            <Route path="/services/:id" element={<ServiceDetail />}/>
+            <Route path="/activities/:id" element={<ActivityDetail />}/>
 
 
         <Route path="/unauthorized" element={<h2>No tienes permisos para acceder aquí</h2>} />

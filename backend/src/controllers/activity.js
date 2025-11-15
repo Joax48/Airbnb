@@ -12,18 +12,21 @@ export const getPublicActivities = async (req, res) => {
 
 export const createActivity = async (req, res) => {
   try {
-    const { name, category, description, price, date } = req.body;
+    const { name, category, description, price, date, imageUrl } = req.body;
+
+    const userId = req.user.id_user || req.user.Id;
 
     const result = await pool.query(
-      `INSERT INTO "Activity" (name, category, description, price, date, approved, status)
-       VALUES ($1, $2, $3, $4, $5, FALSE, 'pending')
+      `INSERT INTO "Activity"
+        (name, category, description, price, date, image_url, approved, status, id_user)
+       VALUES ($1, $2, $3, $4, $5, $6, FALSE, 'pending', $7)
        RETURNING *`,
-      [name, category, description, price, date]
+      [name, category, description, price, date, imageUrl, userId]
     );
 
     res.status(201).json(result.rows[0]);
   } catch (error) {
-    console.error("Error creando actividad:", error.message);
+    console.error("Error creando actividad:", error);
     res.status(500).json({ message: "Error al crear actividad" });
   }
 };
