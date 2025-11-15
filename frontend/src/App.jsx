@@ -3,9 +3,6 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 // Public Pages
 import Home from './pages/Home/Home.jsx'
 
-// LogIn
-import LogInPage from './pages/LogIn/LogIn.jsx';
-
 // Resources
 import AccommodationsPage from './pages/Resources/Property.jsx'
 import ActivitiesPage from './pages/Resources/Activity.jsx'
