@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import "../../style/HostModal.css";
 import { useNavigate } from "react-router-dom";
+import homeImg from "../../assets/images/host-home.jpg";
+import activityImg from "../../assets/images/host-activity.jpg";
+import serviceImg from "../../assets/images/host-service.jpg";
 
 const HostModal = ({ onClose }) => {
   const [selection, setSelection] = useState(null);
@@ -25,26 +28,32 @@ const HostModal = ({ onClose }) => {
 
         <h2>¿Qué te gustaría compartir?</h2>
 
-        <div className="host-options">
-          <button
-            className={`host-option ${selection === "alojamiento" ? "selected" : ""}`}
-            onClick={() => handleSelect("alojamiento")}
-          >
-            Alojamiento
-          </button>
-          <button
-            className={`host-option ${selection === "actividad" ? "selected" : ""}`}
-            onClick={() => handleSelect("actividad")}
-          >
-            Actividad
-          </button>
-          <button
-            className={`host-option ${selection === "servicio" ? "selected" : ""}`}
-            onClick={() => handleSelect("servicio")}
-          >
-            Servicio
-          </button>
+        <div className="host-options-cards">
+        <div
+          className={`host-card ${selection === "alojamiento" ? "selected" : ""}`}
+          onClick={() => handleSelect("alojamiento")}
+        >
+          <img src={homeImg} alt="Alojamiento" />
+          <p>Alojamiento</p>
         </div>
+
+        <div
+          className={`host-card ${selection === "actividad" ? "selected" : ""}`}
+          onClick={() => handleSelect("actividad")}
+        >
+          <img src={activityImg} alt="Actividad" />
+          <p>Actividad</p>
+        </div>
+
+        <div
+          className={`host-card ${selection === "servicio" ? "selected" : ""}`}
+          onClick={() => handleSelect("servicio")}
+        >
+          <img src={serviceImg} alt="Servicio" />
+          <p>Servicio</p>
+        </div>
+      </div>
+
 
         <div className="next-btn-container">
           <button className="next-btn" onClick={handleNext}>

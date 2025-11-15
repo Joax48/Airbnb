@@ -48,9 +48,9 @@ const Home = () => {
     <Navbar />
     <Container>
       <SearchBar onSearch={handleSearch} />
-      <SectionCarousel title="Casas destacadas" items={casas} />
-      <SectionCarousel title="Apartamentos recomendados" items={apartamentos} />
-      <SectionCarousel title="Cabañas populares" items={cabañas} />
+      <SectionCarousel title="Casas destacadas" items={casas} type="properties"/>
+      <SectionCarousel title="Apartamentos recomendados" items={apartamentos} type="properties" />
+      <SectionCarousel title="Cabañas populares" items={cabañas} type="properties" />
     </Container>
   </>
 
