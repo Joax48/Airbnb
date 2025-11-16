@@ -23,7 +23,7 @@ const verifyYubiOtp = (otp) => {
 
 export const LogIn = async (req, res) => {
   const { email, password, otp } = req.body;
-
+  const clientIp = req.ip || req.connection.remoteAddress;
   if (!email || !password || !otp) {
     return res.status(400).json({
       message: "Debe ingresar email, contraseña y OTP.",
@@ -33,11 +33,13 @@ export const LogIn = async (req, res) => {
   try {
     const userData = await findUserByUsername(email);
     if (!userData) {
+      await auditLogInAttempt(null, "[LOGIN FAILED]: Email Not Found", clientIp);
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
 
     const validPass = await bcrypt.compare(password, userData.password_hash);
     if (!validPass) {
+      await auditLogInAttempt(userData.id_user, "[LOGIN FAILED]: Incorrect password", clientIp);
       return res.status(401).json({ message: "Contraseña incorrecta" });
     }
 
@@ -45,12 +47,12 @@ export const LogIn = async (req, res) => {
     /*
     const result = await verifyYubiOtp(otp);
     if (!result.valid || result.otp.substring(0, 12) !== userData.yubikey_public_id) {
+      await auditLogInAttempt(userData.id_user, "[LOGIN FAILED]: invalid Yubikey OTP Auth", clientIp);
       return res.status(401).json({ message: "Yubikey OTP inválido" });
     }
     */
 
     const token = generateToken(userData);
-
     // Guarda token en cookie segura
     res.cookie("authToken", token, {
       httpOnly: true,
@@ -58,7 +60,8 @@ export const LogIn = async (req, res) => {
       sameSite: "strict",
       maxAge: 60 * 60 * 1000, // 1h
     });
-
+    
+    await auditLogInAttempt(userData.id_user, "[LOGIN SUCCESS]: Successfull user log in", clientIp);
     return res.status(200).json({
       message: "Inicio de sesión exitoso",
       user: {
@@ -68,22 +71,22 @@ export const LogIn = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error(" Error en LogIn:", error);
+    console.error("Error en LogIn:", error);
     return res.status(500).json({ message: "Error interno del servidor" });
   }
 };
 
 
 const findUserByUsername = async (email) => {
-    try {
-        const result = await pool.query(
-            'SELECT * FROM "User" WHERE email = $1', [email]
-        );
-        return result.rows[0];
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
+  try {
+    const result = await pool.query(
+        'SELECT * FROM "User" WHERE email = $1', [email]
+    );
+    return result.rows[0];
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
 
 export const getCurrentUser = async (req, res) => {
@@ -125,3 +128,14 @@ export const logoutUser = (req, res) => {
     return res.status(500).json({ message: "Error al cerrar sesión" });
   }
 };
+
+const auditLogInAttempt = async (id_user, action, ip) => {
+  try {
+    await pool.query(
+      'INSERT INTO "AuditLog" (user_id, action, ip_address) VALUES ' +
+      '($1, $2, $3)', [id_user, action, ip]
+    );
+  } catch (error) {
+    console.error("Error auditando el intento de inicio de sesion", error.message);
+  }
+}
