@@ -13,7 +13,8 @@ import ServiceDetail from "./pages/Resources/ServiceDetail";
 import ActivityDetail from "./pages/Resources/ActivityDetail";
 
 // User Pages
-import SavedPage from './pages/User/saved.jsx'
+import SavedPage from './pages/User/Saved.jsx'
+import MyResourcesPage from "./pages/User/MyResources.jsx";
 
 // Utils
 import NotFound from './pages/Extras/NotFound.jsx'
@@ -31,8 +32,8 @@ function App() {
           <Route path="/properties/create"element={<ProtectedRoute><AccommodationsPage /></ProtectedRoute>}/>
           <Route path="/activities/create"element={<ProtectedRoute><ActivitiesPage/></ProtectedRoute>}/>
           <Route path="/services/create"element={<ProtectedRoute><ServicesPage/></ProtectedRoute>}/>
-          <Route path="/LogIn"element={<ProtectedRoute><LogInPage/></ProtectedRoute>}/>
           <Route path="/saved" element={<ProtectedRoute><SavedPage/></ProtectedRoute>} />
+          <Route path="/myResources" element={<ProtectedRoute><MyResourcesPage/></ProtectedRoute>} />
             <Route path="/properties/:id" element={<PropertyDetail/>} />
             <Route path="/services/:id" element={<ServiceDetail />}/>
             <Route path="/activities/:id" element={<ActivityDetail />}/>

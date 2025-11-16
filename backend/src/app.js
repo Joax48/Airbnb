@@ -13,7 +13,7 @@ import uploadRoutes from "./routes/upload.js";
 import jwtAuthRoutes from "./routes/jwtAuth.routes.js";
 import cookieParser from "cookie-parser";
 import amenitiesRoutes from "./routes/amenities.js";
-
+import resourceRoutes from "./routes/resources.js";
 
 const app = express();
 
@@ -33,9 +33,13 @@ app.use("/api/saved", savedRoutes);
 app.use("/api/jwt/", jwtAuthRoutes);
 app.use("/api/uploads", uploadRoutes);
 app.use("/api/amenities", amenitiesRoutes);
+app.use("/api/resources", resourceRoutes);
 
 app.get("/", (req, res) => {
   res.send("API SecureBNB funcionando correctamente");
 });
 
 export default app;
+
+
+
