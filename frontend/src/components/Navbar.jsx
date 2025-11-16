@@ -80,6 +80,7 @@ const Navbar = () => {
                     <Link to="/saved" className="dropdown-item">
                       Mis guardados
                     </Link>
+                    <Link to="/myResources" className="dropdown-item">Mis recursos</Link>
                     <hr />
 
 

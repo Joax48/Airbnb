@@ -1,4 +1,4 @@
-import { MapPin, DollarSign, Info } from "lucide-react";
+import { DollarSign, Info } from "lucide-react";
 import ApprovalButtons from "./ApprovalButtons.jsx";
 import "../../style/PendingCard.css";
 

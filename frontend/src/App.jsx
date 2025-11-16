@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 
 // Public Pages
 import Home from './pages/Home/Home.jsx'
@@ -10,7 +10,6 @@ import ServicesPage from './pages/Resources/Service.jsx'
 
 // Admin
 import AdminLayout from "./layouts/AdminLayout.jsx";
-import DashboardPage from "./pages/admin/Dashboard.jsx";
 import ApprovalsPage from "./pages/admin/Approvals.jsx";
 import UsersPage from "./pages/admin/Users.jsx";
 import LogsPage from "./pages/admin/Logs.jsx";
@@ -20,7 +19,8 @@ import ServiceDetail from "./pages/Resources/ServiceDetail";
 import ActivityDetail from "./pages/Resources/ActivityDetail";
 
 // User Pages
-import SavedPage from './pages/User/saved.jsx';
+import SavedPage from './pages/User/Saved.jsx'
+import MyResourcesPage from "./pages/User/MyResources.jsx";
 
 // Utils
 import NotFound from './pages/Extras/NotFound.jsx'
@@ -39,6 +39,7 @@ function App() {
           <Route path="/activities/create"element={<ProtectedRoute><ActivitiesPage/></ProtectedRoute>}/>
           <Route path="/services/create"element={<ProtectedRoute><ServicesPage/></ProtectedRoute>}/>
           <Route path="/saved" element={<ProtectedRoute><SavedPage/></ProtectedRoute>} />
+          <Route path="/myResources" element={<ProtectedRoute><MyResourcesPage/></ProtectedRoute>} />
             <Route path="/properties/:id" element={<PropertyDetail/>} />
             <Route path="/services/:id" element={<ServiceDetail />}/>
             <Route path="/activities/:id" element={<ActivityDetail />}/>
@@ -55,7 +56,7 @@ function App() {
             </AdminRoute>
           }
         >
-          <Route index element={<DashboardPage />} />
+          <Route index element={<Navigate to="approvals" replace />} />
           <Route path="approvals" element={<ApprovalsPage />} />
           <Route path="users" element={<UsersPage />} />
           <Route path="logs" element={<LogsPage />} />

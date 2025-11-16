@@ -16,6 +16,8 @@ import adminUserRoutes from "./routes/admin.users.routes.js";
 import cookieParser from "cookie-parser";
 import amenitiesRoutes from "./routes/amenities.js";
 
+import resourceRoutes from "./routes/resources.js";
+
 const app = express();
 
 app.use(helmet());
@@ -36,9 +38,13 @@ app.use("/api/admin/approval", approvalRoutes);
 app.use("/api/admin", adminUserRoutes);
 app.use("/api/uploads", uploadRoutes);
 app.use("/api/amenities", amenitiesRoutes);
+app.use("/api/resources", resourceRoutes);
 
 app.get("/", (req, res) => {
   res.send("API SecureBNB funcionando correctamente");
 });
 
 export default app;
+
+
+
