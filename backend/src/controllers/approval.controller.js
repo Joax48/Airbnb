@@ -1,5 +1,6 @@
 import { pool } from "../config/db.js";
 import { logAction } from "../utils/audit.js";
+import { actorFromReq } from "../utils/actor.js";
 
 // To normalize and validate ID
 function parseId(param) {
@@ -10,16 +11,6 @@ function parseId(param) {
     throw err;
   }
   return id;
-}
-
-function actorFromReq(req) {
-  const actor = req.user || {};
-  return {
-    id: actor.id_user ?? actor.id ?? null,
-    email: actor.email ?? null,
-    role: actor.role ?? null,
-    ip: req.ip ?? null,
-  };
 }
 
 function cleanReason(str) {
@@ -45,7 +36,7 @@ export const getPendingProperties = async (req, res) => {
 
 export const approveProperty = async (req, res, next) => {
   const id = parseId(req.params.id);
-  const actor = req.user || {};
+  const actor = actorFromReq(req);
   const client = await pool.connect();
 
   try {
@@ -74,18 +65,13 @@ export const approveProperty = async (req, res, next) => {
     const after = afterRows[0];
 
     await logAction(client, {
-      action: "APPROVE_PROPERTY",
+      action: "APPROVE on PROPERTY",
       entityType: "Property",
       entityId: id,
       before: { status: before.status, approved: before.approved },
       after: { status: after.status, approved: after.approved },
       reason: null,
-      actor: {
-        id: actor.id_user ?? actor.id ?? null,
-        email: actor.email ?? null,
-        role: actor.role ?? null,
-        ip: req.ip ?? null,
-      },
+      actor,
       at: new Date().toISOString(),
     });
 
@@ -101,7 +87,7 @@ export const approveProperty = async (req, res, next) => {
 
 export const rejectProperty = async (req, res, next) => {
   const id = parseId(req.params.id);
-  const actor = req.user || {};
+  const actor = actorFromReq(req);
   const { reason } = req.body || {};
   const cleanReason = (reason || "").toString().trim();
 
@@ -139,18 +125,13 @@ export const rejectProperty = async (req, res, next) => {
     const after = afterRows[0];
 
     await logAction(client, {
-      action: "REJECT_PROPERTY",
+      action: "REJECT on PROPERTY",
       entityType: "Property",
       entityId: id,
       before: { status: before.status, approved: before.approved },
       after: { status: after.status, approved: after.approved },
       reason: cleanReason,
-      actor: {
-        id: actor.id_user ?? actor.id ?? null,
-        email: actor.email ?? null,
-        role: actor.role ?? null,
-        ip: req.ip ?? null,
-      },
+      actor,
       at: new Date().toISOString(),
     });
 
@@ -211,7 +192,7 @@ export const approveActivity = async (req, res, next) => {
     const after = afterRows[0];
 
     await logAction(client, {
-      action: "APPROVE_ACTIVITY",
+      action: "APPROVE on ACTIVITY",
       entityType: "Activity",
       entityId: id,
       before: { status: before.status, approved: before.approved },
@@ -268,7 +249,7 @@ export const rejectActivity = async (req, res, next) => {
     const after = afterRows[0];
 
     await logAction(client, {
-      action: "REJECT_ACTIVITY",
+      action: "REJECT on ACTIVITY",
       entityType: "Activity",
       entityId: id,
       before: { status: before.status, approved: before.approved },
@@ -335,7 +316,7 @@ export const approveService = async (req, res, next) => {
     const after = afterRows[0];
 
     await logAction(client, {
-      action: "APPROVE_SERVICE",
+      action: "APPROVE on SERVICE",
       entityType: "Service",
       entityId: id,
       before: { approved: before.approved },
@@ -387,7 +368,7 @@ export const rejectService = async (req, res, next) => {
     const after = afterRows[0];
 
     await logAction(client, {
-      action: "REJECT_SERVICE",
+      action: "REJECT on SERVICE",
       entityType: "Service",
       entityId: id,
       before: { approved: before.approved },

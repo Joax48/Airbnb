@@ -62,7 +62,7 @@ export default function AdminLayout() {
               `admin-nav__link ${isActive ? "admin-nav__link--active" : ""}`
             }
           >
-            Logs
+            Registros
           </NavLink>
         </nav>
 

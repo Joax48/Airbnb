@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import { Users as UsersIcon } from "lucide-react";
 import useUsersQuery from "../../hooks/useUsersQuery.js";
 
 import Toolbar from "../../components/admin/Toolbar.jsx";

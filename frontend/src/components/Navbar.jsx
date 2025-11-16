@@ -3,7 +3,6 @@ import "../style/Navbar.css";
 import HostModal from "./Modals/HostModal";
 import LogInModal from "./Modals/LogInModal";
 import Container from "./Container";
-import { Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { Link } from "react-router-dom";
 

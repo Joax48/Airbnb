@@ -5,7 +5,7 @@ export default function Toolbar({
   onFilterChange,
   onReload,
   loading,
-  placeholder = "Filtrar por nombre o ID...",
+  placeholder = "Buscar por nombre o ID...",
   buttonLabel = "Recargar",
   loadingLabel = "Cargando...",
 }) {
