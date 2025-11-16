@@ -1,0 +1,131 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background:#f7f7f7;
+  padding: 15px 40px;
+  border-bottom: 1px solid #eee;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo {
+  font-size: 22px;
+  color: #ff385c;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.nav-center a {
+  margin: 0 10px;
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+}
+
+.nav-center a:hover {
+  color: #ff385c;
+}
+
+.nav-right button {
+  margin-left: 10px;
+  border: none;
+  cursor: pointer;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.host-btn {
+  background: #ff385c;
+  color: white;
+}
+
+.host-btn:hover {
+  background: #e03151;
+}
+
+.login-btn {
+  background: #f7f7f7;
+  border: 1px solid #ddd;
+}
+.login-btn:hover {
+  background: #e7e7e7;
+}
+
+
+.user-menu {
+  position: relative;
+  display: inline-block;
+}
+
+.user-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #333;
+  font-weight: 500;
+}
+
+.user-btn:hover {
+  color: #ff385c;
+}
+
+.user-avatar {
+  background-color: #ff385c;
+  color: white;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.user-dropdown {
+  position: absolute;
+  top: 42px;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0px 3px 10px rgba(0,0,0,0.1);
+  padding: 10px 0;
+  min-width: 180px;
+  z-index: 20;
+}
+
+.dropdown-item {
+  display: block;
+  padding: 12px 16px;
+  font-size: 0.95rem;
+  color: #333;
+  text-decoration: none;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.dropdown-item:hover:not(.disabled) {
+  background-color: #f5f5f5;
+}
+
+.dropdown-item.disabled {
+  color: #888;
+  cursor: default;
+}
+
+.dropdown-item.admin {
+  font-weight: bold;
+  color: #ff385c;
+}
+
+.dropdown-item.logout {
+  margin-top: 10px;
+  color: #ff385c;
+  border-top: 1px solid #eee;
+}

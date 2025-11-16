@@ -1,0 +1,19 @@
+.back-btn {
+  background: none;
+  border: none;
+  color: #555;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: 15px;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+}
+
+.back-btn:hover {
+  color: #ff385c;
+  transform: translateX(-3px);
+}
+
+

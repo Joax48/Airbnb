@@ -1,0 +1,124 @@
+.logIn-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.logIn-modal {
+  background: #fff;
+  border-radius: 16px;
+  padding: 30px 35px;
+  width: 100%;
+  max-width: 400px;
+  font-family: "Poppins", sans-serif;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+.logIn-modal h2 {
+  color: #333;
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 18px;
+  gap: 8px;
+}
+
+.logIn-modal label {
+  text-align: left;
+  font-weight: 500;
+  color: #333;
+  font-size: 15px;
+}
+
+.logIn-modal input {
+  display: block;
+  box-sizing: border-box;
+  width: 100%; 
+  border: 1.8px solid #ddd;
+  border-radius: 8px;
+  padding: 11px 12px;
+  font-size: 15px;
+  outline: none;
+  margin-bottom: 15px;
+  transition: all 0.2s ease;
+  background-color: #fafafa;
+}
+
+.logIn-modal input:focus {
+  border-color: #ff385c;
+  background-color: #fff;
+  box-shadow: 0 0 3px rgba(255, 56, 92, 0.3);
+}
+
+.logIn-modal input::placeholder {
+  color: #999;
+}
+
+.confirm-btn-container {
+  width: 100%;
+  text-align: center;
+  margin-top: 30px;
+}
+
+.confirm-btn {
+  width: 100%;
+  box-sizing: border-box;
+  background: #ff385c;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s ease;
+}
+
+.confirm-btn:hover {
+  background: #e03151;
+}
+
+.err-message {
+  background-color: #ffcdd2;
+  color: #b71c1c;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
+.success-message {
+  background-color: #c8e6c9;
+  color: #1b5e20;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #555;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.close-btn:hover {
+  color: #ff385c;
+}
