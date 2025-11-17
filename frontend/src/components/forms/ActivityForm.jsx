@@ -12,6 +12,7 @@ const ActivityForm = () => {
     description: "",
     price: "",
     date: "",
+    location: "",
     imageUrl: "",
   });
 
@@ -92,6 +93,7 @@ const ActivityForm = () => {
         description: "",
         price: "",
         date: "",
+        location: "",
         imageUrl: "",
       });
       setImageFile(null);
@@ -179,6 +181,18 @@ const ActivityForm = () => {
           required
         />
       </div>
+      
+      <div className="form-group">
+      <label>Ubicación *</label>
+      <input
+        name="location"
+        placeholder="Ej: San José, Costa Rica"
+        value={form.location}
+        onChange={handleChange}
+        required
+      />
+    </div>
+
 
       <div className="form-group">
         <label>Descripción</label>

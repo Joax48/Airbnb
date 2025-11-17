@@ -4,9 +4,13 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import Home from './pages/Home/Home.jsx'
 
 // Resources
-import AccommodationsPage from './pages/Resources/Property.jsx'
-import ActivitiesPage from './pages/Resources/Activity.jsx'
-import ServicesPage from './pages/Resources/Service.jsx'
+import AccommodationsForn from './pages/Resources/Property.jsx'
+import ActivitiesForm from './pages/Resources/Activity.jsx'
+import ServicesForm from './pages/Resources/Service.jsx'
+import AccommodationsPage from './pages/Resources/PropertiesPage.jsx'
+import ActivitiesPage from './pages/Resources/ActivitiesPage.jsx'
+import ServicesPage from './pages/Resources/ServicesPage.jsx' 
+import ResourceListPage from './pages/Resources/ResourceListPage.jsx'
 
 // Admin
 import AdminLayout from "./layouts/AdminLayout.jsx";
@@ -35,14 +39,21 @@ function App() {
         <Route path="/" element={<Home />} />     
 
           {/* Solo usuarios logueados */}
-          <Route path="/properties/create"element={<ProtectedRoute><AccommodationsPage /></ProtectedRoute>}/>
-          <Route path="/activities/create"element={<ProtectedRoute><ActivitiesPage/></ProtectedRoute>}/>
-          <Route path="/services/create"element={<ProtectedRoute><ServicesPage/></ProtectedRoute>}/>
+          <Route path="/properties/create"element={<ProtectedRoute><AccommodationsForn /></ProtectedRoute>}/>
+          <Route path="/activities/create"element={<ProtectedRoute><ActivitiesForm/></ProtectedRoute>}/>
+          <Route path="/services/create"element={<ProtectedRoute><ServicesForm/></ProtectedRoute>}/>
+
+          <Route path="/properties" element={<AccommodationsPage />} /> 
+          <Route path="/activities" element={<ActivitiesPage />} />
+          <Route path="/services" element={<ServicesPage />} />
+
           <Route path="/saved" element={<ProtectedRoute><SavedPage/></ProtectedRoute>} />
           <Route path="/myResources" element={<ProtectedRoute><MyResourcesPage/></ProtectedRoute>} />
-            <Route path="/properties/:id" element={<PropertyDetail/>} />
-            <Route path="/services/:id" element={<ServiceDetail />}/>
-            <Route path="/activities/:id" element={<ActivityDetail />}/>
+          
+          <Route path="/properties/:id" element={<PropertyDetail/>} />
+          <Route path="/services/:id" element={<ServiceDetail />}/>
+          <Route path="/activities/:id" element={<ActivityDetail />}/>
+          <Route path="/explore/:resourceType" element={<ResourceListPage />} />
 
 
         <Route path="/unauthorized" element={<h2>No tienes permisos para acceder aquí</h2>} />

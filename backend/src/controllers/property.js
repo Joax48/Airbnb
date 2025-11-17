@@ -70,7 +70,6 @@ export const getPropertyById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    // Obtener propiedad + info del host
     const property = await pool.query(
       `
       SELECT

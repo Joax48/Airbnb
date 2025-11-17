@@ -10,7 +10,7 @@ const SectionCarousel = ({ title, items, type }) => {
     <section className="carousel-section">
       <div className="carousel-header">
         <h2>{title}</h2>
-        <a href="#" className="view-more">Ver más →</a>
+        <a href={`/${type}`} className="view-more">Ver más →</a>
       </div>
 
       <div className="carousel-container">
