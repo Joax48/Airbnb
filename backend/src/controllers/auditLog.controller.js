@@ -1,4 +1,3 @@
-// controllers/auditLog.controller.js
 import { pool } from "../config/db.js";
 
 export const getAuditLogs = async (req, res, next) => {

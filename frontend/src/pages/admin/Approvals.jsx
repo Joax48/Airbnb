@@ -1,5 +1,4 @@
-import { Inbox } from 'lucide-react';
-import { Home, CalendarClock, Wrench } from 'lucide-react';
+import { Inbox, Home, CalendarClock, Wrench } from 'lucide-react';
 import useApprovals from '../../hooks/useApprovals';
 import PendingPropertyCard from '../../components/admin/PendingPropertyCard.jsx';
 import PendingActivityCard from '../../components/admin/PendingActivityCard.jsx';
