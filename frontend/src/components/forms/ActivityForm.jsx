@@ -18,27 +18,35 @@ const ActivityForm = () => {
 
   const [imageFile, setImageFile] = useState(null);
   const [loading, setLoading] = useState(false);
+  
+  const [message, setMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
+
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const validTypes = ["image/jpeg", "image/png", "image/webp"];
-      if (!validTypes.includes(file.type)) {
-        alert("Solo JPG, PNG o WEBP.");
-        return;
-      }
-      if (file.size > 5 * 1024 * 1024) {
-        alert("Máximo 5MB.");
-        return;
-      }
-      setImageFile(file);
+    if (!file) return;
+
+    const validTypes = ["image/jpeg", "image/png", "image/webp"];
+
+    if (!validTypes.includes(file.type)) {
+      setIsSuccess(false);
+      setMessage("Solo JPG, PNG o WEBP.");
+      return;
     }
+
+    if (file.size > 5 * 1024 * 1024) {
+      setIsSuccess(false);
+      setMessage("La imagen no puede superar los 5MB.");
+      return;
+    }
+
+    setImageFile(file);
   };
 
   const uploadToCloudinary = async () => {
@@ -68,9 +76,13 @@ const ActivityForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setMessage("");
 
-    if (!form.name.trim() || !form.category.trim() || !form.date)
-      return alert("Completa los campos obligatorios.");
+    if (!form.name.trim() || !form.category.trim() || !form.date) {
+      setIsSuccess(false);
+      setMessage("Completa los campos obligatorios.");
+      return;
+    }
 
     setLoading(true);
 
@@ -84,8 +96,12 @@ const ActivityForm = () => {
         dataToSend
       );
 
-      alert("Actividad creada correctamente");
-      navigate("/");
+      setIsSuccess(true);
+      setMessage("Actividad creada correctamente");
+
+      setTimeout(() => {
+        navigate("/");
+      }, 1800);
 
       setForm({
         name: "",
@@ -98,8 +114,8 @@ const ActivityForm = () => {
       });
       setImageFile(null);
     } catch (error) {
-      console.error(error);
-      alert("Error al crear actividad");
+      setIsSuccess(false);
+      setMessage("Error al crear actividad");
     } finally {
       setLoading(false);
     }
@@ -108,113 +124,124 @@ const ActivityForm = () => {
   return (
     <div className="Activity-page">
       <Navbar />
-    <form className="basic-form" onSubmit={handleSubmit}>
-      <BackButton to="/" />
+      <form className="basic-form" onSubmit={handleSubmit}>
+        
+        <BackButton to="/" />
 
-      <h2>Registrar Actividad</h2>
+        <h2>Registrar Actividad</h2>
 
-      <div className="form-group">
-        <label>Nombre *</label>
-        <input
-          name="name"
-          placeholder="Ej: Tour en kayak"
-          value={form.name}
-          onChange={handleChange}
-          required
-        />
-      </div>
+        {message && (
+          <p className={isSuccess ? "success-message" : "err-message"}>
+            {message}
+          </p>
+        )}
 
-      <div className="form-group">
-        <label>Categoría *</label>
-        <select
-          name="category"
-          value={form.category}
-          onChange={handleChange}
-          required
-          className="select-input"
-        >
-          <option value="">Seleccione una categoría</option>
-          <optgroup label="Tours locales">
-            <option value="Visitas guiadas">Visitas guiadas</option>
-            <option value="Rutas gastronómicas">Rutas gastronómicas</option>
-            <option value="Excursiones culturales">Excursiones culturales</option>
-          </optgroup>
-          <optgroup label="Clases">
-            <option value="Cocina">Cocina</option>
-            <option value="Fotografía">Fotografía</option>
-            <option value="Surf">Surf</option>
-            <option value="Yoga">Yoga</option>
-            <option value="Baile">Baile</option>
-          </optgroup>
-          <optgroup label="Experiencias inmersivas">
-            <option value="Convivencias locales">Convivencias con comunidades locales</option>
-            <option value="Talleres artesanales">Talleres artesanales</option>
-            <option value="Naturaleza">Actividades en la naturaleza</option>
-          </optgroup>
-          <optgroup label="Experiencias online">
-            <option value="Talleres virtuales">Talleres virtuales</option>
-            <option value="Recorridos virtuales">Recorridos virtuales guiados</option>
-          </optgroup>
-        </select>
-      </div>
+        <div className="form-group">
+          <label>Nombre *</label>
+          <input
+            name="name"
+            placeholder="Ej: Tour en kayak"
+            value={form.name}
+            onChange={handleChange}
+            required
+          />
+        </div>
 
-      <div className="form-group">
-        <label>Precio *</label>
-        <input
-          type="number"
-          name="price"
-          placeholder="Ej: 45.00"
-          value={form.price}
-          onChange={handleChange}
-          min="1"
-          required
-        />
-      </div>
+        <div className="form-group">
+          <label>Categoría *</label>
+          <select
+            name="category"
+            value={form.category}
+            onChange={handleChange}
+            required
+            className="select-input"
+          >
+            <option value="">Seleccione una categoría</option>
 
-      <div className="form-group">
-        <label>Fecha y hora *</label>
-        <input
-          type="datetime-local"
-          name="date"
-          value={form.date}
-          onChange={handleChange}
-          required
-        />
-      </div>
-      
-      <div className="form-group">
-      <label>Ubicación *</label>
-      <input
-        name="location"
-        placeholder="Ej: San José, Costa Rica"
-        value={form.location}
-        onChange={handleChange}
-        required
-      />
-    </div>
+            <optgroup label="Tours locales">
+              <option value="Visitas guiadas">Visitas guiadas</option>
+              <option value="Rutas gastronómicas">Rutas gastronómicas</option>
+              <option value="Excursiones culturales">Excursiones culturales</option>
+            </optgroup>
 
+            <optgroup label="Clases">
+              <option value="Cocina">Cocina</option>
+              <option value="Fotografía">Fotografía</option>
+              <option value="Surf">Surf</option>
+              <option value="Yoga">Yoga</option>
+              <option value="Baile">Baile</option>
+            </optgroup>
 
-      <div className="form-group">
-        <label>Descripción</label>
-        <textarea
-          name="description"
-          placeholder="Describe la actividad..."
-          value={form.description}
-          onChange={handleChange}
-          rows="4"
-        />
-      </div>
+            <optgroup label="Experiencias inmersivas">
+              <option value="Convivencias locales">Convivencias locales</option>
+              <option value="Talleres artesanales">Talleres artesanales</option>
+              <option value="Naturaleza">Actividades en la naturaleza</option>
+            </optgroup>
 
-      <div className="form-group">
-        <label>Imagen de la actividad</label>
-        <input type="file" accept="image/*" onChange={handleImageChange} />
-        {imageFile && <p>Archivo: {imageFile.name}</p>}
-      </div>
+            <optgroup label="Experiencias online">
+              <option value="Talleres virtuales">Talleres virtuales</option>
+              <option value="Recorridos virtuales">Recorridos virtuales guiados</option>
+            </optgroup>
 
-      <button className="create-btn" type="submit" disabled={loading}>
-        {loading ? "Guardando..." : "Crear actividad"}
-      </button>
-    </form>
+          </select>
+        </div>
+
+        <div className="form-group">
+          <label>Precio *</label>
+          <input
+            type="number"
+            name="price"
+            placeholder="Ej: 45.00"
+            value={form.price}
+            onChange={handleChange}
+            min="1"
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Fecha y hora *</label>
+          <input
+            type="datetime-local"
+            name="date"
+            value={form.date}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Ubicación *</label>
+          <input
+            name="location"
+            placeholder="Ej: San José, Costa Rica"
+            value={form.location}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Descripción</label>
+          <textarea
+            name="description"
+            placeholder="Describe la actividad..."
+            value={form.description}
+            onChange={handleChange}
+            rows="4"
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Imagen de la actividad</label>
+          <input type="file" accept="image/*" onChange={handleImageChange} />
+          {imageFile && <p>Archivo: {imageFile.name}</p>}
+        </div>
+
+        <button className="create-btn" type="submit" disabled={loading}>
+          {loading ? "Guardando..." : "Crear actividad"}
+        </button>
+      </form>
     </div>
   );
 };

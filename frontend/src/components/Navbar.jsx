@@ -6,6 +6,9 @@ import Container from "./Container";
 import { useAuth } from "../hooks/useAuth";
 import { Link, useLocation } from "react-router-dom";
 
+// ICONOS
+import { FaRegStar, FaBox, FaReceipt } from "react-icons/fa";
+
 const Navbar = () => {
   const [showHostModal, setShowHostModal] = useState(false);
   const [showLogInModal, setShowLogInModal] = useState(false);
@@ -14,7 +17,6 @@ const Navbar = () => {
   const menuRef = useRef(null);
   const location = useLocation();
 
-  // Detectar sección activa
   const currentPath = location.pathname;
 
   const isActive = (route) => {
@@ -29,7 +31,6 @@ const Navbar = () => {
     }
   };
 
-  // Cerrar el menu al hacer clic fuera
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
@@ -84,16 +85,27 @@ const Navbar = () => {
                     <p className="dropdown-item disabled">
                       {user?.email || ""}
                     </p>
+
                     {user?.role === "admin" && (
                       <Link to="/admin" className="dropdown-item admin">
                         Ir a panel de administración
                       </Link>
                     )}
+
+                    {/* OPCIONES CON ICONOS */}
                     <Link to="/saved" className="dropdown-item">
+                      <FaRegStar className="icon" />
                       Mis guardados
                     </Link>
+
                     <Link to="/myResources" className="dropdown-item">
+                      <FaBox className="icon" />
                       Mis recursos
+                    </Link>
+
+                    <Link to="/myBookings" className="dropdown-item">
+                      <FaReceipt className="icon" />
+                      Mis reservaciones
                     </Link>
 
                     <hr />

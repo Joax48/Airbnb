@@ -15,6 +15,7 @@ import approvalRoutes from "./routes/approval.routes.js";
 import adminUserRoutes from "./routes/admin.users.routes.js";
 import cookieParser from "cookie-parser";
 import amenitiesRoutes from "./routes/amenities.js";
+import bookingsRoutes from "./routes/bookings.js";
 
 import resourceRoutes from "./routes/resources.js";
 
@@ -39,6 +40,7 @@ app.use("/api/admin", adminUserRoutes);
 app.use("/api/uploads", uploadRoutes);
 app.use("/api/amenities", amenitiesRoutes);
 app.use("/api/resources", resourceRoutes);
+app.use("/api", bookingsRoutes);
 
 app.get("/", (req, res) => {
   res.send("API SecureBNB funcionando correctamente");

@@ -68,7 +68,8 @@ const SavedPage = () => {
 
                 {item.data.price && (
                   <p className="saved-price">
-                    {formatPrice(item.data.price)} {item.item_type === "properties" ? "por noche" : ""}
+                    {formatPrice(item.data.price)} {item.item_type === "properties" ? "por noche" : ""}{item.item_type==="activities" && " por persona"}
+                          {item.item_type==="services" && " por servicio"}
                   </p>
                 )}
 
