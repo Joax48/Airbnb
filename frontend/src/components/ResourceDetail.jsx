@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { DateRange } from "react-date-range";
-import { differenceInDays } from "date-fns";
+import { differenceInDays, endOfDay } from "date-fns";
+import { useNavigate } from "react-router-dom";
 
 import axios from "axios";
 import { useSaved } from "../hooks/useSaved";
@@ -35,6 +36,11 @@ const ResourceDetail = ({ type }) => {
 
   const [showLogin, setShowLogin] = useState(false);
   const [pendingSave, setPendingSave] = useState(null);
+
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+  const [nights, setNights] = useState(1);
+  const navigate = useNavigate();
 
   const icons = {
     MdWifi,
@@ -160,23 +166,17 @@ const ResourceDetail = ({ type }) => {
                 <DateRange
                   ranges={[
                     {
-                      startDate: resource.startDate || new Date(),
-                      endDate: resource.endDate || new Date(),
+                      startDate: startDate,
+                      endDate: endDate,
                       key: "selection",
                     },
                   ]}
                   onChange={(range) => {
-                    const { startDate, endDate } = range.selection;
-
-                    setResource((prev) => ({
-                      ...prev,
-                      startDate,
-                      endDate,
-                      nights: Math.max(
-                        differenceInDays(endDate, startDate),
-                        1
-                      ),
-                    }));
+                    const s = range.selection.startDate; 
+                    const e = range.selection.endDate;
+                    setStartDate(s);
+                    setEndDate(e);
+                    setNights(Math.max(differenceInDays(e,s), 1));
                   }}
                   moveRangeOnFirstSelection={false}
                   rangeColors={["#ff385c"]}
@@ -245,7 +245,21 @@ const ResourceDetail = ({ type }) => {
                   </div>
                 )}
 
-                <button className="reserve-btn large">Reservar</button>
+                <button className="reserve-btn large"
+                  onClick={() => {
+                    navigate(`/checkout/${type}/${id}`, {
+                      state: {
+                        startDate: startDate,
+                        endDate: endDate,
+                        nights: nights,
+                        price: resource.price,
+                        total: nights * resource.price,
+                      }
+                    });
+                  }}
+                >
+                  Reservar
+                </button>
 
                 <p className="no-charge">
                   No se hará ningún cargo por el momento.

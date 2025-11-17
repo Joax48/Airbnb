@@ -16,6 +16,9 @@ import ActivityDetail from "./pages/Resources/ActivityDetail";
 import SavedPage from './pages/User/Saved.jsx'
 import MyResourcesPage from "./pages/User/MyResources.jsx";
 
+// Checkout Pages
+import Checkout from './pages/Checkout/checkout.jsx';
+
 // Utils
 import NotFound from './pages/Extras/NotFound.jsx'
 import ProtectedRoute from './utils/ProtectedRoute.jsx';
@@ -37,6 +40,8 @@ function App() {
             <Route path="/properties/:id" element={<PropertyDetail/>} />
             <Route path="/services/:id" element={<ServiceDetail />}/>
             <Route path="/activities/:id" element={<ActivityDetail />}/>
+
+          <Route path="/checkout/:type/:id" element={<Checkout/>}/>
 
           <Route path="/unauthorized" element={<h2>No tienes permisos para acceder aquí</h2>} />
           <Route path="*" element={<NotFound />} />
