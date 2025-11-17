@@ -4,7 +4,6 @@ import { ArrowUpDown } from "lucide-react";
 
 const HEADERS = [
   { key: "id",         label: "ID" },
-  { key: "name",       label: "Nombre" },
   { key: "email",      label: "Email" },
   { key: "role",       label: "Rol" },
   { key: "action",     label: "Action" },
@@ -44,9 +43,8 @@ export default function UsersTable({ rows = [], sortBy, sortDir, onSort, loading
             rows.map((u) => (
               <tr key={u.id}>
                 <td>{u.id}</td>
-                <td>{u.name}</td>
-                <td>{u.email}</td>
-                <td className="capitalize">{u.role}</td>
+                <td>{u.email || "N/A"}</td>
+                <td className="capitalize">{u.role || "Sin rol"}</td>
                 <td>{u.action}</td>
                 <td>{u.timestamp}</td>
               </tr>
