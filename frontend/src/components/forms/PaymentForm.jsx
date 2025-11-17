@@ -8,7 +8,8 @@ const PaymentForm = ({ bookingId, date_start, date_end, onSuccess }) => {
   const [cardNumber, setCardNumber] = useState("");
   const [cvv, setCvv] = useState("");
   const [expDate, setExpDate] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
+  const [message, setMessage] = useState("");
+  const [success, setSuccess] = useState(false);
 
   const navigate = useNavigate();
 
@@ -42,27 +43,31 @@ const PaymentForm = ({ bookingId, date_start, date_end, onSuccess }) => {
       }
     );
 
-    setSuccessMessage("¡Pago realizado con éxito!");
+    setMessage("¡Pago realizado con éxito!");
+    setSuccess(true);
 
     // Desaparece después de 3 segundos y redirige
     setTimeout(() => {
       setSuccessMessage("");
+      setSuccess(false);
       navigate("/"); // redirige al home
     }, 3000);
 
     onSuccess(res.data);
 
   } catch (error) {
-    setSuccessMessage(""); // limpiar mensaje anterior
-    alert(error.response?.data?.message || "Error al procesar el pago");
+    setMessage(error.response?.data?.message || "Error al procesar el pago"); // limpiar mensaje anterior
+    setSuccess(false);
   }
 };
 
 
   return (
     <form className="payment-form" onSubmit={handleSubmit}>
-      {successMessage && (
-        <div className="success-message">{successMessage}</div>
+      {message && (
+        <div className={ success ? "success-message" : "err-message"}>
+          {message}
+        </div>
       )}
 
       <h2>Detalles de pago</h2>

@@ -67,13 +67,24 @@
   font-size: 13px;
   text-align: center;
 }
+
 .success-message {
   background-color: #d4edda;
   color: #155724;
   padding: 10px 15px;
   border-radius: 8px;
   margin: 10px 0;
-  border: 1px solid #c3e6cb;
+  font-weight: bold;
+  text-align: center;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.err-message {
+  background-color: #ffcdd2;
+  color: #b71c1c;
+  padding: 10px 15px;
+  border-radius: 8px;
+  margin: 10px 0;
   font-weight: bold;
   text-align: center;
   animation: fadeIn 0.5s ease-in-out;
