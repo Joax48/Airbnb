@@ -44,7 +44,7 @@ const LogInModal = ({ onClose }) => {
             }
         } catch (error) {
             setIsSuccess(false);
-            setMessage(error.message);
+            setMessage(error.response?.data?.message);
         } finally {
             setLoading(false);
         }

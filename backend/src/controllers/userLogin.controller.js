@@ -46,6 +46,13 @@ export const LogIn = async (req, res) => {
   }
 
   try {
+    const time_left = await verifyBlockedTimeLeft(email, actor);
+    if (time_left > 0) {
+      return res.status(429).json( { message: `Demasiados intentos fallidos. Intentelo de nuevo en ` +
+        `${time_left} minutos`
+      });
+    }
+
     const userData = await findUserByUsername(email);
     if (!userData) {
       await logAction(null, {
@@ -69,17 +76,21 @@ export const LogIn = async (req, res) => {
         actor,
         at: new Date().toISOString(),
       });
-
+      await registerFailedAttempt(email);
       return res.status(401).json({ message: "Contraseña incorrecta" });
     }
 
-    //  (Descomentar cuando se use YubiKey)
-
     const result = await verifyYubiOtp(otp);
     if (!result.valid || result.otp.substring(0, 12) !== userData.yubikey_public_id) {
-      await auditLogInAttempt(userData.id_user, "[Auth]: Login failed - invalid Yubikey OTP", clientIp,
-        userData.email, userData.role
-      );
+      await logAction(null, {
+        action: "[Auth]: Login failed — invalid otp yubikey authentication",
+        entityType: "User",
+        entityId: userData.id_user,
+        reason: "INVALID_YUBIKEY",
+        actor,
+        at: new Date().toISOString(),
+      });
+      await registerFailedAttempt(email);
       return res.status(401).json({ message: "Yubikey OTP inválido" });
     }
 
@@ -105,6 +116,8 @@ export const LogIn = async (req, res) => {
       maxAge: 60 * 60 * 1000, // 1h
     });
     
+    await cleanFailedAttempts(email);
+
     return res.status(200).json({
       message: "Inicio de sesión exitoso",
       user: {
@@ -119,6 +132,47 @@ export const LogIn = async (req, res) => {
   }
 };
 
+const verifyBlockedTimeLeft = async (email, actor) => {
+    const response = await pool.query(
+      `SELECT attempts, last_attempt FROM "FailedLogin" ` +
+      `WHERE email = $1`, [email]
+    );
+    if (response.rows.length > 0) {
+      const { attempts, last_attempt } = response.rows[0];
+      const now = new Date();
+      const elapsed_time = (now - new Date(last_attempt)) / 60000; 
+
+      if (attempts >= 3 && elapsed_time < 10) {
+        const minutes_left = Math.ceil(10 - elapsed_time);
+        
+        await logAction(null, {
+          action: "[Auth]: Login blocked — too many attempts",
+          entityType: "User",
+          entityId: null,
+          reason: "ACCOUNT_LOCKED",
+          actor,
+          at: new Date().toISOString(),
+        });
+        return minutes_left;
+      }
+      if (elapsed_time >= 10) {
+        await cleanFailedAttempts(email);
+      }
+    }
+    return 0;
+}
+
+const registerFailedAttempt = async (email) => {
+  await pool.query(
+    `INSERT INTO "FailedLogin"(email, attempts, last_attempt)
+     VALUES ($1, 1, CURRENT_TIMESTAMP)
+     ON CONFLICT (email)
+     DO UPDATE SET
+       attempts = "FailedLogin".attempts + 1,
+       last_attempt = CURRENT_TIMESTAMP`,
+    [email]
+  );
+};
 
 const findUserByUsername = async (email) => {
     try {
@@ -181,4 +235,8 @@ export const logoutUser = async (req, res) => {
     return res.status(500).json({ message: "Error al cerrar sesión" });
   }
 };
+
+const cleanFailedAttempts = async (email) => {
+  await pool.query(`DELETE FROM "FailedLogin" WHERE email = $1`, [email]); 
+}
 
