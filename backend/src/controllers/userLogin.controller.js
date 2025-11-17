@@ -32,7 +32,7 @@ export const LogIn = async (req, res) => {
   const clientIp = req.ip || req.connection.remoteAddress;
   if (!email || !password || !otp) {
     await logAction(null, {
-      action: "LOGIN FAILED",
+      action: "[Auth]: Login failed — missing credentials",
       entityType: "User",
       entityId: null,
       reason: "MISSING_CREDENTIALS",
@@ -49,7 +49,7 @@ export const LogIn = async (req, res) => {
     const userData = await findUserByUsername(email);
     if (!userData) {
       await logAction(null, {
-        action: "LOGIN FAILED",
+        action: "[Auth]: Login failed — user not found",
         entityType: "User",
         entityId: null,
         reason: "USER_NOT_FOUND",
@@ -62,7 +62,7 @@ export const LogIn = async (req, res) => {
     const validPass = await bcrypt.compare(password, userData.password_hash);
     if (!validPass) {
       await logAction(null, {
-        action: "LOGIN FAILED",
+        action: "[Auth]: Login failed — invalid password",
         entityType: "User",
         entityId: userData.id_user,
         reason: "INVALID_PASSWORD",
@@ -74,20 +74,20 @@ export const LogIn = async (req, res) => {
     }
 
     //  (Descomentar cuando se use YubiKey)
-    /*
+
     const result = await verifyYubiOtp(otp);
     if (!result.valid || result.otp.substring(0, 12) !== userData.yubikey_public_id) {
-      await auditLogInAttempt(userData.id_user, "[LOGIN FAILED]: invalid Yubikey OTP Auth", clientIp,
+      await auditLogInAttempt(userData.id_user, "[Auth]: Login failed - invalid Yubikey OTP", clientIp,
         userData.email, userData.role
       );
       return res.status(401).json({ message: "Yubikey OTP inválido" });
     }
-    */
+
 
     const token = generateToken(userData);
 
     await logAction(null, {
-      action: "LOGIN SUCCESS",
+      action: "[Auth]: Login completed successfully",
       entityType: "User",
       entityId: userData.id_user,
       before: null,
@@ -159,7 +159,7 @@ export const logoutUser = async (req, res) => {
   try {
     const actor = actorFromReq(req);
     await logAction(null, {
-      action: "LOGOUT",
+      action: "[Auth]: User logged out successfully",
       entityType: "User",
       entityId: actor.id ?? null,
       before: null,

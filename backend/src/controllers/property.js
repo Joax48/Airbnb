@@ -40,7 +40,7 @@ export const createAccommodation = async (req, res) => {
     }
 
     await logAction(client, {
-      action: "CREATE on PROPERTY",
+      action: "[Property]: New listing added successfully",
       entityType: "Property",
       entityId: property.id_property,
       before: null,

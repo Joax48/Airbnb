@@ -30,7 +30,7 @@ export const createActivity = async (req, res) => {
     const activity = result.rows[0];
 
     await logAction(null, {
-      action: "CREATE on ACTIVITY",
+      action: "[Activity]: New listing added successfully",
       entityType: "Activity",
       entityId: activity.id_activity,
       before: null,

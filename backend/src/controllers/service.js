@@ -31,7 +31,7 @@ export const createService = async (req, res) => {
     const service = result.rows[0];
 
     await logAction(client, {
-      action: "CREATE on SERVICE",
+      action: "[Service]: New listing added successfully",
       entityType: "Service",
       entityId: service.id_service,
       before: null,
