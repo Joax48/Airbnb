@@ -1,4 +1,6 @@
 import { pool } from "../config/db.js";
+import { actorFromReq } from "../utils/actor.js";
+import { logAction } from "../utils/audit.js";
 
 export const getPublicActivities = async (req, res) => {
   try {
@@ -12,9 +14,10 @@ export const getPublicActivities = async (req, res) => {
 
 export const createActivity = async (req, res) => {
   try {
+    const actor = actorFromReq(req);
     const { name, category, description, price, date, imageUrl } = req.body;
 
-    const userId = req.user.id_user || req.user.Id;
+    const userId = actor.id;
 
     const result = await pool.query(
       `INSERT INTO "Activity"
@@ -24,7 +27,24 @@ export const createActivity = async (req, res) => {
       [name, category, description, price, date, imageUrl, userId]
     );
 
-    res.status(201).json(result.rows[0]);
+    const activity = result.rows[0];
+
+    await logAction(null, {
+      action: "CREATE on ACTIVITY",
+      entityType: "Activity",
+      entityId: activity.id_activity,
+      before: null,
+      after: {
+        status: activity.status,
+        approved: activity.approved,
+        id_user: activity.id_user,
+      },
+      reason: null,
+      actor,
+      at: new Date().toISOString(),
+    });
+
+    res.status(201).json(activity);
   } catch (error) {
     console.error("Error creando actividad:", error);
     res.status(500).json({ message: "Error al crear actividad" });

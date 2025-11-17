@@ -1,7 +1,11 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { pool } from "../config/db.js";
+import { actorFromReq } from "../utils/actor.js";
+import { logAction } from "../utils/audit.js";
+
 import dotenv from "dotenv";
+
 dotenv.config();
 
 import { generateToken } from "../middleware/jwt.auth.js";
@@ -22,9 +26,19 @@ const verifyYubiOtp = (otp) => {
 };
 
 export const LogIn = async (req, res) => {
+  const actor = actorFromReq(req);
   const { email, password, otp } = req.body;
   const clientIp = req.ip || req.connection.remoteAddress;
   if (!email || !password || !otp) {
+    await logAction(null, {
+      action: "LOGIN FAILED",
+      entityType: "User",
+      entityId: null,
+      reason: "MISSING_CREDENTIALS",
+      actor,
+      at: new Date().toISOString(),
+    });
+
     return res.status(400).json({
       message: "Debe ingresar email, contraseña y OTP.",
     });
@@ -33,14 +47,28 @@ export const LogIn = async (req, res) => {
   try {
     const userData = await findUserByUsername(email);
     if (!userData) {
-      await auditLogInAttempt(null, "[LOGIN FAILED]: Email Not Found", clientIp, undefined, undefined);
+      await logAction(null, {
+        action: "LOGIN FAILED",
+        entityType: "User",
+        entityId: null,
+        reason: "USER_NOT_FOUND",
+        actor,
+        at: new Date().toISOString(),
+      });
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
 
     const validPass = await bcrypt.compare(password, userData.password_hash);
     if (!validPass) {
-      await auditLogInAttempt(userData.id_user, "[LOGIN FAILED]: Incorrect password", clientIp,
-        userData.email, userData.role);
+      await logAction(null, {
+        action: "LOGIN FAILED",
+        entityType: "User",
+        entityId: userData.id_user,
+        reason: "INVALID_PASSWORD",
+        actor,
+        at: new Date().toISOString(),
+      });
+
       return res.status(401).json({ message: "Contraseña incorrecta" });
     }
 
@@ -56,6 +84,18 @@ export const LogIn = async (req, res) => {
     */
 
     const token = generateToken(userData);
+
+    await logAction(null, {
+      action: "LOGIN SUCCESS",
+      entityType: "User",
+      entityId: userData.id_user,
+      before: null,
+      after: null,
+      reason: null,
+      actor,
+      at: new Date().toISOString(),
+    });
+
     // Guarda token en cookie segura
     res.cookie("authToken", token, {
       httpOnly: true,
@@ -83,15 +123,14 @@ export const LogIn = async (req, res) => {
 
 
 const findUserByUsername = async (email) => {
-  try {
-    const result = await pool.query(
-        'SELECT * FROM "User" WHERE email = $1', [email]
-    );
-    return result.rows[0];
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+    try {
+        const result = await pool.query(
+            'SELECT * FROM "User" WHERE email = $1', [email]
+        );
+        return result.rows[0];
+    } catch (error) {
+        throw error;
+    }
 };
 
 export const getCurrentUser = async (req, res) => {
@@ -118,8 +157,19 @@ export const getCurrentUser = async (req, res) => {
 };
 
 
-export const logoutUser = (req, res) => {
+export const logoutUser = async (req, res) => {
   try {
+    const actor = actorFromReq(req);
+    await logAction(null, {
+      action: "LOGOUT",
+      entityType: "User",
+      entityId: actor.id ?? null,
+      before: null,
+      after: null,
+      reason: null,
+      actor,
+      at: new Date().toISOString(),
+    });
     // Borra la cookie del token
     res.clearCookie("authToken", {
       httpOnly: true,
@@ -134,13 +184,3 @@ export const logoutUser = (req, res) => {
   }
 };
 
-const auditLogInAttempt = async (id_user, action, ip, email, role) => {
-  try {
-    await pool.query(
-      'INSERT INTO "AuditLog" (user_id, action, ip_address, user_email, user_role) VALUES ' +
-      '($1, $2, $3, $4, $5)', [id_user, action, ip, email, role]
-    );
-  } catch (error) {
-    console.error("Error auditando el intento de inicio de sesion", error.message);
-  }
-}

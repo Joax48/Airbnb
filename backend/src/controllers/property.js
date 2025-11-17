@@ -1,4 +1,6 @@
 import { pool } from "../config/db.js";
+import { actorFromReq } from "../utils/actor.js";
+import { logAction } from "../utils/audit.js";
 
 export const getPublicProperties = async (req, res) => {
   try {
@@ -11,39 +13,58 @@ export const getPublicProperties = async (req, res) => {
 };
 
 export const createAccommodation = async (req, res) => {
+  const client = await pool.connect();
   try {
     const { name, type, description, price, location, imageUrl, amenities } = req.body;
+    const actor = actorFromReq(req);
 
-    const userId = req.user.Id || req.user.id_user;
+  await client.query("BEGIN");
 
-    const result = await pool.query(
+    const result = await client.query(
       `INSERT INTO "Property"
         (name, type, description, price, location, image_url, approved, status, id_user)
        VALUES ($1,$2,$3,$4,$5,$6,FALSE,'pending',$7)
-       RETURNING id_property`,
-      [name, type, description, price, location, imageUrl, userId]
+       RETURNING *`,
+      [name, type, description, price, location, imageUrl, actor.id]
     );
 
-    const propertyId = result.rows[0].id_property;
+    const property = result.rows[0];
 
-    // Insertar amenidades
     if (amenities && amenities.length > 0) {
       for (let a of amenities) {
-        await pool.query(
+        await client.query(
           `INSERT INTO "Property_Amenity" (id_property, id_amenity) VALUES ($1, $2)`,
-          [propertyId, a]
+          [property.id_property, a]
         );
       }
     }
 
-    res.status(201).json({ message: "Alojamiento creado", propertyId });
+    await logAction(client, {
+      action: "CREATE on PROPERTY",
+      entityType: "Property",
+      entityId: property.id_property,
+      before: null,
+      after: {
+        status: property.status,
+        approved: property.approved,
+        id_user: property.id_user,
+      },
+      reason: null,
+      actor,
+      at: new Date().toISOString(),
+    });
+
+    await client.query("COMMIT");
+
+    res.status(201).json({ message: "Alojamiento creado", propertyId: property.propertyId, });
 
   } catch (error) {
     console.error("Error creando alojamiento:", error);
     res.status(500).json({ message: "Error al crear alojamiento" });
+  } finally {
+    client.release();
   }
 };
-
 
 export const getPropertyById = async (req, res) => {
   try {

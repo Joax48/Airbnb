@@ -1,0 +1,28 @@
+.role-filter {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 1rem;
+}
+
+.role-chip {
+  padding: 6px 12px;
+  border-radius: var(--admin-radius);
+  border: 1px solid var(--admin-border);
+  background: var(--admin-surface);
+  color: var(--admin-text);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: var(--admin-shadow);
+}
+
+.role-chip:hover {
+  border-color: var(--admin-primary);
+  color: var(--admin-primary);
+}
+
+.role-chip.active {
+  background: var(--admin-primary);
+  color: #fff;
+  border-color: var(--admin-primary-hover);
+  box-shadow: 0 2px 8px rgba(255, 56, 92, 0.3);
+}
