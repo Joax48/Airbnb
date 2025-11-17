@@ -1,0 +1,179 @@
+/* === CONTENEDOR GENERAL === */
+.my-bookings-page {
+  max-width: 1000px;
+  margin: 40px auto 40px;
+  font-family: "Poppins", sans-serif;
+}
+
+/* TÍTULO */
+.my-bookings-title {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 25px;
+  color: #222;
+}
+
+/* === FILTRO === */
+.booking-filter {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.booking-filter-select {
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 15px;
+  font-family: "Inter", sans-serif;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.booking-filter-select:hover {
+  border-color: #ff385c;
+}
+
+.booking-filter-select:focus {
+  outline: none;
+  border-color: #ff385c;
+  box-shadow: 0 0 4px rgba(255, 56, 92, 0.4);
+}
+
+/* === GRID DE RESERVAS === */
+.bookings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* === TARJETA DE RESERVA === */
+.booking-card {
+  background: #fff;
+  display: flex;
+  gap: 18px;
+  padding: 18px;
+  border-radius: 16px;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.06);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  cursor: pointer;
+  align-items: center; /* centra la tercera columna */
+}
+
+.booking-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+}
+
+/* === IMAGEN === */
+.booking-img {
+  width: 150px;           /* MÁS GRANDE como pediste */
+  height: 150px;
+  border-radius: 14px;
+  object-fit: cover;
+}
+
+/* === INFO === */
+.booking-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  flex: 1;
+}
+
+.booking-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #111;
+}
+
+.booking-type {
+  font-size: 14px;
+  color: #777;
+  margin-top: 2px;
+}
+
+.booking-date {
+  margin: 3px 0;
+  font-size: 15px;
+}
+
+.booking-total {
+  margin-top: 5px;
+  font-size: 17px;
+  font-weight: 700;
+  color: #111;
+}
+
+/* === COLUMNA 3 — Botón de Reagendar === */
+.booking-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 160px;      /* ancho fijo para separar visualmente */
+}
+
+.booking-reschedule-btn {
+  background-color: #ff385c;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.booking-reschedule-btn:hover {
+  background-color: #e62f52;
+  transform: translateY(-2px);
+}
+
+.booking-icon {
+  font-size: 18px;
+}
+
+/* === MENSAJE VACÍO === */
+.empty-bookings {
+  margin-top: 30px;
+  padding: 40px;
+  font-size: 18px;
+  color: #666;
+  background: white;
+  border-radius: 14px;
+  text-align: center;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 700px) {
+  .booking-card {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .booking-img {
+    width: 100%;
+    height: 200px;
+  }
+
+  .booking-info {
+    align-items: center;
+  }
+
+  .booking-actions {
+    width: 100%;
+    margin-top: 12px;
+  }
+
+  .booking-reschedule-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

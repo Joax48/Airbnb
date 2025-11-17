@@ -52,7 +52,12 @@ const MyResourcesPage = () => {
                 <h3>{item.name}</h3>
 
                 {item.price && (
-                  <p className="resource-price">{formatPrice(item.price)}</p>
+                  <p className="resource-price">{formatPrice(item.price)}
+                   <span>
+                          {item.item_type==="properties" && " por noche"}
+                          {item.item_type==="activities" && " por persona"}
+                          {item.item_type==="services" && " por servicio"}
+                        </span></p>
                 )}
 
                 <Link

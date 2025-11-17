@@ -12,6 +12,7 @@ import { generateToken } from "../middleware/jwt.auth.js";
 
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
+const isProduction = process.env.NODE_ENV === "production";
 
 const yub = require("yub");
 yub.init(process.env.YUBI_CLIENT_ID, process.env.YUBI_SECRET_KEY);
@@ -99,8 +100,8 @@ export const LogIn = async (req, res) => {
     // Guarda token en cookie segura
     res.cookie("authToken", token, {
       httpOnly: true,
-      secure: false, // Poner true en produccion (HTTPS)
-      sameSite: "strict",
+      secure: isProduction,
+      sameSite: isProduction? "none":"strict",
       maxAge: 60 * 60 * 1000, // 1h
     });
     
@@ -170,8 +171,8 @@ export const logoutUser = async (req, res) => {
     // Borra la cookie del token
     res.clearCookie("authToken", {
       httpOnly: true,
-      secure: false, // true en produccion!!!!!
-      sameSite: "strict"
+      secure: isProduction, // true en produccion!!!!!
+      sameSite: isProduction? "none":"strict",
     });
 
     return res.status(200).json({ message: "Sesión cerrada correctamente" });

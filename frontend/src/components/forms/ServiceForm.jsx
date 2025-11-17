@@ -18,6 +18,10 @@ const ServiceForm = () => {
 
   const [imageFile, setImageFile] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  const [message, setMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
+
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -31,12 +35,14 @@ const ServiceForm = () => {
     const validTypes = ["image/jpeg", "image/png", "image/webp"];
 
     if (!validTypes.includes(file.type)) {
-      alert("Solo se permiten JPG, PNG o WEBP.");
+      setIsSuccess(false);
+      setMessage("Solo se permiten imágenes JPG, PNG o WEBP.");
       return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
-      alert("La imagen no puede superar 5 MB.");
+      setIsSuccess(false);
+      setMessage("La imagen no puede superar los 5 MB.");
       return;
     }
 
@@ -71,25 +77,35 @@ const ServiceForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setMessage("");
 
-    if (form.price <= 0) return alert("El precio debe ser mayor que 0.");
-    if (!form.name.trim() || !form.type.trim())
-      return alert("Por favor completa los campos obligatorios.");
+    if (form.price <= 0) {
+      setIsSuccess(false);
+      setMessage("El precio debe ser mayor que 0.");
+      return;
+    }
+
+    if (!form.name.trim() || !form.type.trim()) {
+      setIsSuccess(false);
+      setMessage("Completa los campos obligatorios.");
+      return;
+    }
 
     setLoading(true);
+
     try {
       const imageUrl = await uploadToCloudinary();
 
       const body = { ...form, imageUrl };
 
-      const res = await axios.post(
-        "http://localhost:4000/api/services",
-        body
-      );
+      await axios.post("http://localhost:4000/api/services", body);
 
-      alert("Servicio registrado correctamente");
-      navigate("/");
-      console.log(res.data);
+      setIsSuccess(true);
+      setMessage("Servicio registrado correctamente");
+
+      setTimeout(() => {
+        navigate("/");
+      }, 1800);
 
       setForm({
         name: "",
@@ -100,103 +116,114 @@ const ServiceForm = () => {
       });
       setImageFile(null);
     } catch (error) {
-      console.error("Error:", error);
-      alert("Error al registrar servicio");
+      setIsSuccess(false);
+      setMessage("Error al registrar servicio");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="Serive-page">
+    <div className="Service-page">
       <Navbar />
-    <form className="basic-form" onSubmit={handleSubmit}>
-      <BackButton to="/" />
+      
+      <form className="basic-form" onSubmit={handleSubmit}>
+        <BackButton to="/" />
+        <h2>Registrar Servicio</h2>
 
-      <h2>Registrar Servicio</h2>
-
-      <div className="form-group">
-        <label>Nombre *</label>
-        <input
-          name="name"
-          placeholder="Ej: Transporte al aeropuerto"
-          value={form.name}
-          onChange={handleChange}
-          required
-        />
-      </div>
-
-      <div className="form-group">
-        <label>Tipo *</label>
-        <select
-          name="type"
-          value={form.type}
-          onChange={handleChange}
-          required
-          className="select-input"
-        >
-          <option value="">Seleccione un tipo de servicio</option>
-          <optgroup label="Limpieza">
-            <option value="Limpieza incluida">Incluida</option>
-            <option value="Limpieza extra">Extra opcional</option>
-          </optgroup>
-          <optgroup label="Transporte">
-            <option value="Transporte al aeropuerto">Transporte al aeropuerto</option>
-            <option value="Alquiler de bicicletas">Alquiler de bicicletas</option>
-            <option value="Alquiler de autos">Alquiler de autos</option>
-          </optgroup>
-          <optgroup label="Comidas y desayunos">
-            <option value="Desayuno incluido">Desayuno incluido</option>
-            <option value="Comidas locales">Comidas locales</option>
-            <option value="Servicio de catering">Catering</option>
-          </optgroup>
-          <optgroup label="Servicios premium">
-            <option value="Conserjería">Conserjería</option>
-            <option value="Organización de eventos">Organización de eventos</option>
-            <option value="Paquete completo">Paquete de estadía completa</option>
-          </optgroup>
-        </select>
-      </div>
-
-      <div className="form-group">
-        <label>Precio *</label>
-        <input
-          type="number"
-          name="price"
-          placeholder="Ej: 35.00"
-          value={form.price}
-          onChange={handleChange}
-          min="1"
-          required
-        />
-      </div>
-
-      <div className="form-group">
-        <label>Descripción</label>
-        <textarea
-          name="description"
-          placeholder="Describe el servicio ofrecido..."
-          value={form.description}
-          onChange={handleChange}
-          rows="4"
-        />
-      </div>
-
-      <div className="form-group">
-        <label>Imagen del servicio</label>
-        <input type="file" accept="image/*" onChange={handleImageChange} />
-
-        {imageFile && (
-          <p style={{ fontSize: "0.9rem", color: "#555" }}>
-            Archivo: {imageFile.name}
+        {message && (
+          <p className={isSuccess ? "success-message" : "err-message"}>
+            {message}
           </p>
         )}
-      </div>
 
-      <button className="create-btn" type="submit" disabled={loading}>
-        {loading ? "Subiendo..." : "Crear servicio"}
-      </button>
-    </form>
+        <div className="form-group">
+          <label>Nombre *</label>
+          <input
+            name="name"
+            placeholder="Ej: Transporte al aeropuerto"
+            value={form.name}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Tipo *</label>
+          <select
+            name="type"
+            value={form.type}
+            onChange={handleChange}
+            required
+            className="select-input"
+          >
+            <option value="">Seleccione un tipo de servicio</option>
+
+            <optgroup label="Limpieza">
+              <option value="Limpieza incluida">Incluida</option>
+              <option value="Limpieza extra">Extra opcional</option>
+            </optgroup>
+
+            <optgroup label="Transporte">
+              <option value="Transporte al aeropuerto">Transporte al aeropuerto</option>
+              <option value="Alquiler de bicicletas">Alquiler de bicicletas</option>
+              <option value="Alquiler de autos">Alquiler de autos</option>
+            </optgroup>
+
+            <optgroup label="Comidas y desayunos">
+              <option value="Desayuno incluido">Desayuno incluido</option>
+              <option value="Comidas locales">Comidas locales</option>
+              <option value="Servicio de catering">Catering</option>
+            </optgroup>
+
+            <optgroup label="Servicios premium">
+              <option value="Conserjería">Conserjería</option>
+              <option value="Organización de eventos">Organización de eventos</option>
+              <option value="Paquete completo">Paquete de estadía completa</option>
+            </optgroup>
+
+          </select>
+        </div>
+
+        <div className="form-group">
+          <label>Precio *</label>
+          <input
+            type="number"
+            name="price"
+            placeholder="Ej: 35.00"
+            value={form.price}
+            onChange={handleChange}
+            min="1"
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Descripción</label>
+          <textarea
+            name="description"
+            placeholder="Describe el servicio ofrecido..."
+            value={form.description}
+            onChange={handleChange}
+            rows="4"
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Imagen del servicio</label>
+          <input type="file" accept="image/*" onChange={handleImageChange} />
+
+          {imageFile && (
+            <p style={{ fontSize: "0.9rem", color: "#555" }}>
+              Archivo: {imageFile.name}
+            </p>
+          )}
+        </div>
+
+        <button className="create-btn" type="submit" disabled={loading}>
+          {loading ? "Subiendo..." : "Crear servicio"}
+        </button>
+      </form>
     </div>
   );
 };
