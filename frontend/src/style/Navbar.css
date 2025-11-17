@@ -124,6 +124,10 @@
   cursor: default;
 }
 
+.dropdown-item.disabled:hover {
+  background-color: transparent;
+}
+
 .dropdown-item.admin {
   font-weight: bold;
   color: #ff385c;
@@ -133,4 +137,15 @@
   margin-top: 10px;
   color: #ff385c;
   border-top: 1px solid #eee;
+}
+
+.nav-center a.active-nav {
+  font-weight: 700;
+  color: #ff385c;
+  border-bottom: 2px solid #ff385c;
+  padding-bottom: 4px;
+}
+.dropdown-item .icon {
+  margin-right: 8px;
+  font-size: 1rem;
 }
