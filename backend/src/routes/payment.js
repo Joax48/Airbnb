@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { verifyToken } from "../middleware/jwt.auth";
-import { verifyRole } from "../middleware/verifyRole";
+import { verifyToken } from "../middleware/jwt.auth.js";
+
+import { confirmPayment } from "../controllers/payment.js";
 
 const router = Router();
 
-router.post("/", verifyToken, verifyRole["user"], );
+router.post("/confirm", verifyToken, confirmPayment);
 
 export default router;
-

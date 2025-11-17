@@ -25,6 +25,9 @@ const Checkout = () => {
                         <PaymentForm
                             bookingId={id}
                             onSuccess={ () => alert("Pago completado")}
+                            date_start={startDate}
+                            date_end={endDate}
+                            total={total}
                         />
                     </div>
                     <div className="checkout-right">

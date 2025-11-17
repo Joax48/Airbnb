@@ -233,14 +233,14 @@ const ResourceDetail = ({ type }) => {
                   </div>
                 </div>
 
-                {resource.nights && (
+                {nights && (
                   <div className="right-subtotal">
                     <p>
-                      {formatPrice(resource.price)} × {resource.nights} noches
+                      {formatPrice(resource.price)} × {nights} noches
                     </p>
                     <h3>
                       Total:{" "}
-                      {formatPrice(resource.nights * resource.price)}
+                      {formatPrice(nights * resource.price)}
                     </h3>
                   </div>
                 )}

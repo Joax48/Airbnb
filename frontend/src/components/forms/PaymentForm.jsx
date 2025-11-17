@@ -1,27 +1,41 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-import "../../style/CheckoutForm.css";
 
-const PaymentForm = ({ bookingId, onSuccess }) => {
+import "../../style/CheckoutForm.css";
+import { useParams } from "react-router-dom";
+
+const PaymentForm = ({ bookingId, date_start, date_end, onSuccess }) => {
   const [method, setMethod] = useState("VISA");
   const [cardNumber, setCardNumber] = useState("");
   const [cvv, setCvv] = useState("");
   const [expDate, setExpDate] = useState("");
 
+  let { type, id } = useParams();
+
+  const typeMap = {
+  properties: "Property",
+  activities: "Activity",
+  services: "Service"
+  };
+
+  type = typeMap[type];
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-    //   const res = await axios.post("http://localhost:4000/api/payment/confirm", {
-    //     idBooking: bookingId,
-    //     method,
-    //     cardNumber,
-    //     cvv,
-    //     expDate,
-    //   });
-    //   onSuccess(res.data);
-    console.log("Prueba");
+      const res = await axios.post("http://localhost:4000/api/checkout/confirm", {
+        idResource: bookingId,
+        reservationType: type,
+        method,
+        cardNumber,
+        cvv,
+        expDate,
+        date_start,
+        date_end,
+      });
+      onSuccess(res.data);
     } catch (error) {
       alert(error.response?.data?.message || "Error al procesar el pago");
     }
@@ -43,7 +57,7 @@ const PaymentForm = ({ bookingId, onSuccess }) => {
         type="text"
         value={cardNumber}
         onChange={(e) => setCardNumber(e.target.value)}
-        placeholder="1234 5678 9012 3456"
+        placeholder="1234567890123456"
       />
 
       <label>Fecha expiración (MM/AA)</label>

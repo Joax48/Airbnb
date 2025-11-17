@@ -33,13 +33,14 @@ export const LogIn = async (req, res) => {
   try {
     const userData = await findUserByUsername(email);
     if (!userData) {
-      await auditLogInAttempt(null, "[LOGIN FAILED]: Email Not Found", clientIp);
+      await auditLogInAttempt(null, "[LOGIN FAILED]: Email Not Found", clientIp, undefined, undefined);
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
 
     const validPass = await bcrypt.compare(password, userData.password_hash);
     if (!validPass) {
-      await auditLogInAttempt(userData.id_user, "[LOGIN FAILED]: Incorrect password", clientIp);
+      await auditLogInAttempt(userData.id_user, "[LOGIN FAILED]: Incorrect password", clientIp,
+        userData.email, userData.role);
       return res.status(401).json({ message: "Contraseña incorrecta" });
     }
 
@@ -47,7 +48,9 @@ export const LogIn = async (req, res) => {
     /*
     const result = await verifyYubiOtp(otp);
     if (!result.valid || result.otp.substring(0, 12) !== userData.yubikey_public_id) {
-      await auditLogInAttempt(userData.id_user, "[LOGIN FAILED]: invalid Yubikey OTP Auth", clientIp);
+      await auditLogInAttempt(userData.id_user, "[LOGIN FAILED]: invalid Yubikey OTP Auth", clientIp,
+        userData.email, userData.role
+      );
       return res.status(401).json({ message: "Yubikey OTP inválido" });
     }
     */
@@ -61,7 +64,9 @@ export const LogIn = async (req, res) => {
       maxAge: 60 * 60 * 1000, // 1h
     });
     
-    await auditLogInAttempt(userData.id_user, "[LOGIN SUCCESS]: Successfull user log in", clientIp);
+    await auditLogInAttempt(userData.id_user, "[LOGIN SUCCESS]: Successfull user log in", clientIp,
+      userData.email, userData.role
+    );
     return res.status(200).json({
       message: "Inicio de sesión exitoso",
       user: {
@@ -129,11 +134,11 @@ export const logoutUser = (req, res) => {
   }
 };
 
-const auditLogInAttempt = async (id_user, action, ip) => {
+const auditLogInAttempt = async (id_user, action, ip, email, role) => {
   try {
     await pool.query(
-      'INSERT INTO "AuditLog" (user_id, action, ip_address) VALUES ' +
-      '($1, $2, $3)', [id_user, action, ip]
+      'INSERT INTO "AuditLog" (user_id, action, ip_address, user_email, user_role) VALUES ' +
+      '($1, $2, $3, $4, $5)', [id_user, action, ip, email, role]
     );
   } catch (error) {
     console.error("Error auditando el intento de inicio de sesion", error.message);
