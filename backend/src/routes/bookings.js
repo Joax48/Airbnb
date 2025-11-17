@@ -5,6 +5,6 @@ import { getMyBookings  } from "../controllers/bookings.js";
 
 const router = Router();
 
-router.get("/bookings/my", verifyToken, verifyRole(["user", "admin"]), getMyBookings);
+router.get("/my", verifyToken, verifyRole(["user", "admin"]), getMyBookings);
 
 export default router;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate  } from "react-router-dom";
 
 import { useSaved } from "../../hooks/useSaved";
 import { useAuth } from "../../hooks/useAuth";
@@ -19,6 +19,7 @@ const ActivityDetail = () => {
   const { saved, toggleSave, loadSaved } = useSaved();
   const { isAuthenticated } = useAuth();
   const [showLogin, setShowLogin] = useState(false);
+    const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -114,7 +115,26 @@ const ActivityDetail = () => {
                 </div>
 
                 
-                  <button className="reserve-btn large">Reservar</button>
+                  <button
+                    className="reserve-btn large"
+                    onClick={() => {
+                      navigate(`/checkout/activities/${id}`, {
+                        state: {
+                          startDate: activity.date,
+                          endDate: activity.date,
+                          nights: 1,
+                          price: activity.price,
+                          total: activity.price,
+                          title: activity.name,
+                          image: activity.image_url,
+                          location: activity.location
+                        }
+                      });
+                    }}
+                  >
+                    Reservar
+                  </button>
+
                   <p className="no-charge">No se hará ningún cargo por ahora.</p></>
                 ): (
                   <p

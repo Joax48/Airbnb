@@ -42,7 +42,7 @@ app.use("/api/uploads", uploadRoutes);
 app.use("/api/amenities", amenitiesRoutes);
 app.use("/api/resources", resourceRoutes);
 app.use("/api/checkout", paymentRoutes);
-app.use("/api", bookingsRoutes);
+app.use("/api/bookings", bookingsRoutes);
 
 app.get("/", (req, res) => {
   res.send("API SecureBNB funcionando correctamente");

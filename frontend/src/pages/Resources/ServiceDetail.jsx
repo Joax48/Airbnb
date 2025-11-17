@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate  } from "react-router-dom";
 
 import { useSaved } from "../../hooks/useSaved";
 import { useAuth } from "../../hooks/useAuth";
@@ -19,8 +19,8 @@ const ServiceDetail = () => {
   const { saved, toggleSave, loadSaved } = useSaved();
   const { isAuthenticated } = useAuth();
   const [showLogin, setShowLogin] = useState(false);
+  const navigate = useNavigate();
 
-  // Campos que el usuario debe ingresar
   const [requestLocation, setRequestLocation] = useState("");
   const [requestDate, setRequestDate] = useState("");
 
@@ -137,9 +137,26 @@ const ServiceDetail = () => {
                     </div>
 
                     {/* Reservar */}
-                    <button className="reserve-btn large" onClick={handleReservation}>
+                    <button
+                      className="reserve-btn large"
+                      onClick={() => {
+                        navigate(`/checkout/services/${id}`, {
+                          state: {
+                            startDate: requestDate,
+                            endDate: requestDate,
+                            nights: 1,
+                            price: service.price,
+                            total: service.price,
+                            title: service.name,
+                            image: service.image_url,
+                            location: requestLocation
+                          }
+                        });
+                      }}
+                    >
                       Reservar
                     </button>
+
                   </div>
                 ) : (
                   <p
