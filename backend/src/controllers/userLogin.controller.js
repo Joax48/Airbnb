@@ -104,9 +104,6 @@ export const LogIn = async (req, res) => {
       maxAge: 60 * 60 * 1000, // 1h
     });
     
-    await auditLogInAttempt(userData.id_user, "[LOGIN SUCCESS]: Successfull user log in", clientIp,
-      userData.email, userData.role
-    );
     return res.status(200).json({
       message: "Inicio de sesión exitoso",
       user: {
