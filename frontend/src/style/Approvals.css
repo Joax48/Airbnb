@@ -1,0 +1,139 @@
+:root {
+  --admin-bg: #f6f7f9;
+  --admin-surface: #ffffff;
+  --admin-text: #333;
+  --admin-muted: #6b7280;
+  --admin-border: #ddd;
+  --admin-primary: #ff385c;
+  --admin-primary-hover: #e03151;
+  --admin-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --admin-radius: 12px;
+  --admin-input-bg: #fff;
+  --admin-input-border: var(--admin-border);
+  --admin-input-focus: var(--admin-primary);
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 24px;
+  margin: 8px 0 16px;
+  background: var(--admin-surface);
+  border: 1px solid var(--admin-border);
+  border-radius: var(--admin-radius);
+  box-shadow: var(--admin-shadow);
+  color: var(--admin-text);
+  text-align: center;
+}
+
+.empty-icon-wrap {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--admin-bg);
+  border: 1px solid var(--admin-border);
+  display: grid;
+  place-items: center;
+}
+
+.empty-icon {
+  color: var(--admin-muted);
+  stroke-width: 1.8;
+}
+
+.empty-title {
+  margin: 4px 0 0 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--admin-text);
+}
+
+.empty-text {
+  margin: 0 0 6px 0;
+  font-size: 0.95rem;
+  color: var(--admin-muted);
+  max-width: 520px;
+}
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.tab-btn {
+  --bg: var(--tab-bg, rgba(125,125,125,0.08));
+  --fg: #111
+  --bd: var(--tab-bd, rgba(125,125,125,0.25));
+  --ring: var(--tab-ring, rgba(98, 151, 255, 0.55));
+
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--bd);
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1;
+  font-size: 0.925rem;
+  font-weight: 600;
+  transition: transform .12s ease, background .2s ease, border-color .2s ease, color .2s ease;
+}
+
+.tab-btn:hover { transform: translateY(-1px); }
+.tab-btn:active { transform: translateY(0); }
+.tab-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--ring);
+}
+
+.tab-btn.active {
+  --bg: var(--tone-bg);
+  --bd: var(--tone-bd);
+  --fg: var(--tone-fg);
+}
+
+.tab-icon {
+  display: inline-flex;
+  opacity: .95;
+}
+
+.tab-count {
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 11px;
+  background: rgba(0,0,0,.25);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tab-label { letter-spacing: .2px; }
+
+.tone-properties {
+  --tone-bg: rgba(239, 68, 68, 0.10);
+  --tone-bd: rgba(239, 68, 68, 0.35);
+  --tone-fg: #991b1b;
+}
+.tone-activities {
+  --tone-bg: rgba(239, 68, 68, 0.10);
+  --tone-bd: rgba(239, 68, 68, 0.35);
+  --tone-fg: #991b1b;
+}
+.tone-services {
+  --tone-bg: rgba(239, 68, 68, 0.10);
+  --tone-bd: rgba(239, 68, 68, 0.35);
+  --tone-fg: #991b1b;
+}
+
+
+
+
