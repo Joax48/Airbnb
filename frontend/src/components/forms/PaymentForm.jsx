@@ -1,48 +1,70 @@
 import React, { useState } from "react";
 import axios from "axios";
-
-
+import { useParams, useNavigate  } from "react-router-dom";
 import "../../style/CheckoutForm.css";
-import { useParams } from "react-router-dom";
 
 const PaymentForm = ({ bookingId, date_start, date_end, onSuccess }) => {
   const [method, setMethod] = useState("VISA");
   const [cardNumber, setCardNumber] = useState("");
   const [cvv, setCvv] = useState("");
   const [expDate, setExpDate] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
-  let { type, id } = useParams();
+  const navigate = useNavigate();
 
+
+  let { type } = useParams();
+
+  // Mapeo correcto a la estructura del backend
   const typeMap = {
-  properties: "Property",
-  activities: "Activity",
-  services: "Service"
+    properties: "Property",
+    activities: "Activity",
+    services: "Service",
   };
 
-  type = typeMap[type];
+  const reservationType = typeMap[type];
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    try {
-      const res = await axios.post("http://localhost:4000/api/checkout/confirm", {
+  try {
+    const res = await axios.post(
+      "http://localhost:4000/api/checkout/confirm",
+      {
         idResource: bookingId,
-        reservationType: type,
+        reservationType,
         method,
         cardNumber,
         cvv,
         expDate,
         date_start,
         date_end,
-      });
-      onSuccess(res.data);
-    } catch (error) {
-      alert(error.response?.data?.message || "Error al procesar el pago");
-    }
-  };
+      }
+    );
+
+    setSuccessMessage("¡Pago realizado con éxito!");
+
+    // Desaparece después de 3 segundos y redirige
+    setTimeout(() => {
+      setSuccessMessage("");
+      navigate("/"); // redirige al home
+    }, 3000);
+
+    onSuccess(res.data);
+
+  } catch (error) {
+    setSuccessMessage(""); // limpiar mensaje anterior
+    alert(error.response?.data?.message || "Error al procesar el pago");
+  }
+};
+
 
   return (
     <form className="payment-form" onSubmit={handleSubmit}>
+      {successMessage && (
+        <div className="success-message">{successMessage}</div>
+      )}
+
       <h2>Detalles de pago</h2>
 
       <label>Método</label>

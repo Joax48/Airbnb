@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate  } from "react-router-dom";
 import { DateRange } from "react-date-range";
 import { differenceInDays } from "date-fns";
 import axios from "axios";
@@ -33,6 +33,8 @@ const PropertyDetail = () => {
   const { isAuthenticated } = useAuth();
   const [showLogin, setShowLogin] = useState(false);
   const [pendingSave, setPendingSave] = useState(null);
+  const navigate = useNavigate();
+
 
   const icons = {
     MdWifi,
@@ -213,7 +215,27 @@ const PropertyDetail = () => {
                 )}
 
                 {property.approved ? ( 
-                  <> <button className="reserve-btn large">Reservar</button>
+                  <> 
+                   <button
+                      className="reserve-btn large"
+                      onClick={() => {
+                        navigate(`/checkout/properties/${id}`, {
+                          state: {
+                            startDate: property.startDate,
+                            endDate: property.endDate,
+                            nights: property.nights,
+                            price: property.price,
+                            total: property.price * property.nights,
+                            title: property.name,
+                            image: property.image_url,
+                            location: property.location
+                          }
+                        });
+                      }}
+                    >
+                      Reservar
+                    </button>
+
                 <p className="no-charge">No se hará ningún cargo por ahora.</p></>) :  (
                   <p
                     style={{
