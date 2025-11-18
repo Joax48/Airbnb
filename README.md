@@ -14,7 +14,9 @@ Airbnb
 │     │  ├─ amenities.js
 │     │  ├─ approval.controller.js
 │     │  ├─ auditLog.controller.js
+│     │  ├─ bookings.js
 │     │  ├─ jwtAuth.controller.js
+│     │  ├─ payment.js
 │     │  ├─ property.js
 │     │  ├─ resources.js
 │     │  ├─ saved.js
@@ -30,13 +32,17 @@ Airbnb
 │     │  ├─ admin.users.routes.js
 │     │  ├─ amenities.js
 │     │  ├─ approval.routes.js
+│     │  ├─ bookings.js
 │     │  ├─ jwtAuth.routes.js
+│     │  ├─ payment.js
 │     │  ├─ property.js
 │     │  ├─ resources.js
 │     │  ├─ saved.js
 │     │  ├─ service.js
 │     │  ├─ upload.js
 │     │  └─ user.routes.js
+│     ├─ securebnb.crt
+│     ├─ securebnb.key
 │     ├─ server.js
 │     └─ utils
 │        ├─ actor.js
@@ -77,13 +83,14 @@ Airbnb
 │  │  │  ├─ forms
 │  │  │  │  ├─ AccommodationForm.jsx
 │  │  │  │  ├─ ActivityForm.jsx
+│  │  │  │  ├─ PaymentForm.jsx
 │  │  │  │  └─ ServiceForm.jsx
 │  │  │  ├─ modals
 │  │  │  │  ├─ HostModal.jsx
 │  │  │  │  └─ LogInModal.jsx
 │  │  │  ├─ Navbar.jsx
+│  │  │  ├─ ReservationSummary.jsx
 │  │  │  ├─ ResourceCarousel.jsx
-│  │  │  ├─ ResourceDetail.jsx
 │  │  │  ├─ SearchBar.jsx
 │  │  │  └─ SectionCarousel.jsx
 │  │  ├─ hooks
@@ -101,42 +108,53 @@ Airbnb
 │  │  │  │  ├─ Approvals.jsx
 │  │  │  │  ├─ Logs.jsx
 │  │  │  │  └─ Users.jsx
+│  │  │  ├─ Checkout
+│  │  │  │  └─ Checkout.jsx
 │  │  │  ├─ Extras
 │  │  │  │  └─ NotFound.jsx
 │  │  │  ├─ Home
 │  │  │  │  └─ Home.jsx
 │  │  │  ├─ Resources
-│  │  │  │  ├─ AccommodationsPage.jsx
+│  │  │  │  ├─ ActivitiesPage.jsx
 │  │  │  │  ├─ Activity.jsx
 │  │  │  │  ├─ ActivityDetail.jsx
+│  │  │  │  ├─ PropertiesPage.jsx
 │  │  │  │  ├─ Property.jsx
 │  │  │  │  ├─ PropertyDetail.jsx
+│  │  │  │  ├─ ResourceListPage.jsx
 │  │  │  │  ├─ Service.jsx
-│  │  │  │  └─ ServiceDetail.jsx
+│  │  │  │  ├─ ServiceDetail.jsx
+│  │  │  │  └─ ServicesPage.jsx
 │  │  │  └─ User
+│  │  │     ├─ MyBookings.jsx
 │  │  │     ├─ MyResources.jsx
 │  │  │     └─ saved.jsx
 │  │  ├─ style
 │  │  │  ├─ AccommodationForm.css
-│  │  │  ├─ AccomodationsPage.css
+│  │  │  ├─ AccommodationsPage.css
 │  │  │  ├─ ActivityForm.css
 │  │  │  ├─ AdminLayout.css
 │  │  │  ├─ ApprovalButtons.css
 │  │  │  ├─ Approvals.css
 │  │  │  ├─ BackButton.css
 │  │  │  ├─ Card.css
+│  │  │  ├─ Checkout.css
+│  │  │  ├─ CheckoutForm.css
 │  │  │  ├─ EmptyState.css
 │  │  │  ├─ ErrorBlock.css
 │  │  │  ├─ HomePage.css
 │  │  │  ├─ HostModal.css
 │  │  │  ├─ LogInModal.css
+│  │  │  ├─ MyBookings.css
 │  │  │  ├─ MyResources.css
 │  │  │  ├─ Navbar.css
 │  │  │  ├─ NotFound.css
 │  │  │  ├─ Pagination.css
 │  │  │  ├─ PendingCard.css
+│  │  │  ├─ ReservationSummary.css
 │  │  │  ├─ ResourceCarousel.css
 │  │  │  ├─ ResourceDetail.css
+│  │  │  ├─ ResourceListPage.css
 │  │  │  ├─ RoleFilter.css
 │  │  │  ├─ Saved.css
 │  │  │  ├─ SearchBar.css
@@ -151,6 +169,7 @@ Airbnb
 │  └─ vite.config.js
 ├─ package-lock.json
 ├─ package.json
-└─ README.md
+├─ README.md
+└─ yubi.txt
 
 ```
