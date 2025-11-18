@@ -1,0 +1,57 @@
+.users-table__wrap {
+  overflow-x: auto;
+  background: var(--admin-surface);
+  border: 1px solid var(--admin-border);
+  border-radius: var(--admin-radius);
+  box-shadow: var(--admin-shadow);
+}
+
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.users-table thead th {
+  text-align: left;
+  padding: 12px 16px;
+  background: #fafafa;
+  border-bottom: 1px solid var(--admin-border);
+  color: var(--admin-text);
+}
+
+.users-table tbody td {
+  padding: 10px 16px;
+  border-top: 1px solid var(--admin-border);
+  color: var(--admin-text);
+}
+
+.th-sort-btn {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--admin-text);
+  transition: color 0.2s ease;
+}
+
+.th-sort-btn:hover {
+  color: var(--admin-primary);
+}
+
+.th-sort-btn.active {
+  color: var(--admin-primary);
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+.users-table__loading {
+  padding: 20px;
+  text-align: center;
+  color: var(--admin-muted);
+}

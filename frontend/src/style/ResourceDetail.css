@@ -1,0 +1,279 @@
+
+.resource-page {
+  padding: 20px;
+  font-family: "Inter", sans-serif; 
+  color: #222;
+}
+
+
+h1 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+h2 {
+  font-size: 22px;
+  font-weight: 600;
+  margin-top: 24px;
+  margin-bottom: 10px;
+}
+
+h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 6px 0;
+}
+
+p {
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.45;
+  color: #444;
+}
+
+.back-btn {
+  margin-top: 20px;
+}
+
+/* -------------------- TITULO + GUARDAR -------------------- */
+.resource-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: auto;
+}
+
+.save-small {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 6px 12px;
+  background: white;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.save-small.saved {
+  background: #ffeaf0;
+  border-color: #ff385c;
+  color: #ff385c;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.save-small:hover, .save-small.saved :hover {
+  transform: translateY(-6px);
+}
+
+/* -------------------- IMAGEN PRINCIPAL -------------------- */
+.main-image {
+  width: 100%;
+  height: 420px;
+  border-radius: 14px;
+  object-fit: cover;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+}
+
+/* -------------------- PERFIL HOST -------------------- */
+.host-profile {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.host-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #ff385c;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-weight: 700;
+  font-size: 22px;
+}
+
+/* -------------------- LAYOUT -------------------- */
+.two-columns {
+  display: flex;
+  gap: 40px;
+}
+
+.left-column {
+  width: 60%;
+}
+
+.right-column {
+  width: 40%;
+  position: sticky;
+  top: 110px;
+}
+
+/* -------------------- RESERVA DERECHA -------------------- */
+.reservation-box {
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 18px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.07);
+}
+
+.price-box {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.price-box span {
+  font-size: 15px;
+  font-weight: 400;
+  color: #555;
+}
+
+.reservation-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 20px;
+}
+
+.date-group {
+  border: 1px solid #ddd;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.date-group > div {
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.date-group label,
+.guests-box label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.date-group input,
+.guests-box select {
+  border: none;
+  font-size: 15px;
+  background: transparent;
+  padding: 6px 0;
+}
+
+.guests-box {
+  border: 1px solid #ddd;
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+
+.right-subtotal {
+  margin-top: 5px;
+  padding: 14px;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  background: #fafafa;
+}
+
+.right-subtotal p {
+  margin: 0 0 6px 0;
+  color: #444;
+  font-size: 15px;
+}
+
+.right-subtotal h3 {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 700;
+}
+
+
+.reserve-btn.large {
+  width: 100%;
+  padding: 14px 0;
+  margin-top: 15px;
+  font-size: 16px;
+  font-weight: 600;
+  background: #ff385c;
+  color: white;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+}
+
+.no-charge {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #555;
+}
+
+/* -------------------- AMENITIES -------------------- */
+.amenities-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px 20px;
+  margin-top: 12px;
+}
+
+.amenity {
+  display: flex;
+  gap: 10px;
+  font-size: 16px;
+  color: #333;
+}
+
+/* -------------------- MAPA -------------------- */
+.map-container {
+  margin: 20px 0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* -------------------- CALENDARIO -------------------- */
+.rdrCalendarWrapper,
+.rdrMonthAndYearWrapper,
+.rdrMonth {
+  background: transparent !important;
+}
+
+.calendar-section {
+  background: #f7f7f7;
+  border-radius: 12px;
+}
+
+.location-box,
+.datetime-box {
+  border: 1px solid #ddd;
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.location-box label,
+.datetime-box label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #666;
+  letter-spacing: 0.5px;
+}
+
+.location-box input,
+.datetime-box input {
+  border: none;
+  font-size: 15px;
+  background: transparent;
+  padding: 6px 0;
+}

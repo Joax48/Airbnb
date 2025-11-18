@@ -1,0 +1,104 @@
+/* === Payment Form === */
+
+.payment-form {
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Título del formulario */
+.payment-form h2 {
+  margin-bottom: 10px;
+  font-size: 24px;
+  font-weight: 700;
+  color: #222;
+}
+
+/* Etiquetas */
+.payment-form label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: -10px;
+}
+
+/* Inputs y selects */
+.payment-form input,
+.payment-form select {
+  padding: 12px;
+  border: 1px solid #dadada;
+  border-radius: 10px;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.payment-form input:focus,
+.payment-form select:focus {
+  border-color: #ff385c;
+}
+
+/* Botón */
+.payment-form .reserve-btn {
+  margin-top: 15px;
+  padding: 14px;
+  background: #ff385c;
+  border: none;
+  border-radius: 14px;
+  width: 100%;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.payment-form .reserve-btn:hover {
+  background: #e21f48;
+}
+
+/* Nota de seguridad */
+.secure-note {
+  margin-top: 3px;
+  color: #666;
+  font-size: 13px;
+  text-align: center;
+}
+
+.success-message {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 10px 15px;
+  border-radius: 8px;
+  margin: 10px 0;
+  font-weight: bold;
+  text-align: center;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.err-message {
+  background-color: #ffcdd2;
+  color: #b71c1c;
+  padding: 10px 15px;
+  border-radius: 8px;
+  margin: 10px 0;
+  font-weight: bold;
+  text-align: center;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+
+/* Responsive */
+@media (max-width: 600px) {
+  .payment-form {
+    padding: 20px;
+  }
+}

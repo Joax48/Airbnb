@@ -1,0 +1,242 @@
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { pool } from "../config/db.js";
+import { actorFromReq } from "../utils/actor.js";
+import { logAction } from "../utils/audit.js";
+
+import dotenv from "dotenv";
+
+dotenv.config();
+
+import { generateToken } from "../middleware/jwt.auth.js";
+
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+const isProduction = process.env.NODE_ENV === "production";
+
+const yub = require("yub");
+yub.init(process.env.YUBI_CLIENT_ID, process.env.YUBI_SECRET_KEY);
+
+const verifyYubiOtp = (otp) => {
+    return new Promise((resolve, reject) => {
+        yub.verify(otp, (err, data) => {
+            if (err) return reject(err);
+            resolve(data);
+        });
+    });
+};
+
+export const LogIn = async (req, res) => {
+  const actor = actorFromReq(req);
+  const { email, password, otp } = req.body;
+  const clientIp = req.ip || req.connection.remoteAddress;
+  if (!email || !password || !otp) {
+    await logAction(null, {
+      action: "[Auth]: Login failed — missing credentials",
+      entityType: "User",
+      entityId: null,
+      reason: "MISSING_CREDENTIALS",
+      actor,
+      at: new Date().toISOString(),
+    });
+
+    return res.status(400).json({
+      message: "Debe ingresar email, contraseña y OTP.",
+    });
+  }
+
+  try {
+    const time_left = await verifyBlockedTimeLeft(email, actor);
+    if (time_left > 0) {
+      return res.status(429).json( { message: `Demasiados intentos fallidos. Inténtelo de nuevo en ` +
+        `${time_left} minutos`
+      });
+    }
+
+    const userData = await findUserByUsername(email);
+    if (!userData) {
+      await logAction(null, {
+        action: "[Auth]: Login failed — user not found",
+        entityType: "User",
+        entityId: null,
+        reason: "USER_NOT_FOUND",
+        actor,
+        at: new Date().toISOString(),
+      });
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    }
+
+    const validPass = await bcrypt.compare(password, userData.password_hash);
+    if (!validPass) {
+      await logAction(null, {
+        action: "[Auth]: Login failed — invalid password",
+        entityType: "User",
+        entityId: userData.id_user,
+        reason: "INVALID_PASSWORD",
+        actor,
+        at: new Date().toISOString(),
+      });
+      await registerFailedAttempt(email);
+      return res.status(401).json({ message: "Contraseña incorrecta" });
+    }
+
+    const result = await verifyYubiOtp(otp);
+    if (!result.valid || result.otp.substring(0, 12) !== userData.yubikey_public_id) {
+      await logAction(null, {
+        action: "[Auth]: Login failed — invalid otp yubikey authentication",
+        entityType: "User",
+        entityId: userData.id_user,
+        reason: "INVALID_YUBIKEY",
+        actor,
+        at: new Date().toISOString(),
+      });
+      await registerFailedAttempt(email);
+      return res.status(401).json({ message: "Yubikey OTP inválido" });
+    }
+
+
+    const token = generateToken(userData);
+
+    await logAction(null, {
+      action: "[Auth]: Login completed successfully",
+      entityType: "User",
+      entityId: userData.id_user,
+      before: null,
+      after: null,
+      reason: null,
+      actor,
+      at: new Date().toISOString(),
+    });
+
+    // Guarda token en cookie segura
+    res.cookie("authToken", token, {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction? "none":"strict",
+      maxAge: 60 * 60 * 1000, // 1h
+    });
+    
+    await cleanFailedAttempts(email);
+
+    return res.status(200).json({
+      message: "Inicio de sesión exitoso",
+      user: {
+        id_user: userData.id_user,
+        email: userData.email,
+        role: userData.role,
+      },
+    });
+  } catch (error) {
+    console.error("Error en LogIn:", error);
+    return res.status(500).json({ message: "Error interno del servidor" });
+  }
+};
+
+const verifyBlockedTimeLeft = async (email, actor) => {
+    const response = await pool.query(
+      `SELECT attempts, last_attempt FROM "FailedLogin" ` +
+      `WHERE email = $1`, [email]
+    );
+    if (response.rows.length > 0) {
+      const { attempts, last_attempt } = response.rows[0];
+      const now = new Date();
+      const elapsed_time = (now - new Date(last_attempt)) / 60000; 
+
+      if (attempts >= 3 && elapsed_time < 10) {
+        const minutes_left = Math.ceil(10 - elapsed_time);
+        
+        await logAction(null, {
+          action: "[Auth]: Login blocked — too many attempts",
+          entityType: "User",
+          entityId: null,
+          reason: "ACCOUNT_LOCKED",
+          actor,
+          at: new Date().toISOString(),
+        });
+        return minutes_left;
+      }
+      if (elapsed_time >= 10) {
+        await cleanFailedAttempts(email);
+      }
+    }
+    return 0;
+}
+
+const registerFailedAttempt = async (email) => {
+  await pool.query(
+    `INSERT INTO "FailedLogin"(email, attempts, last_attempt)
+     VALUES ($1, 1, CURRENT_TIMESTAMP)
+     ON CONFLICT (email)
+     DO UPDATE SET
+       attempts = "FailedLogin".attempts + 1,
+       last_attempt = CURRENT_TIMESTAMP`,
+    [email]
+  );
+};
+
+const findUserByUsername = async (email) => {
+    try {
+        const result = await pool.query(
+            'SELECT * FROM "User" WHERE email = $1', [email]
+        );
+        return result.rows[0];
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const getCurrentUser = async (req, res) => {
+  try {
+    // Id del usuario extraido del token
+    const userId = req.user.id_user || req.user.Id;
+
+    const result = await pool.query(
+      'SELECT id_user, name, email, role FROM "User" WHERE id_user = $1',
+      [userId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    }
+
+    const user = result.rows[0];
+
+    return res.status(200).json({ user });
+  } catch (error) {
+    console.error("Error al obtener usuario actual:", error);
+    return res.status(500).json({ message: "Error al obtener usuario actual" });
+  }
+};
+
+
+export const logoutUser = async (req, res) => {
+  try {
+    const actor = actorFromReq(req);
+    await logAction(null, {
+      action: "[Auth]: User logged out successfully",
+      entityType: "User",
+      entityId: actor.id ?? null,
+      before: null,
+      after: null,
+      reason: null,
+      actor,
+      at: new Date().toISOString(),
+    });
+    // Borra la cookie del token
+    res.clearCookie("authToken", {
+      httpOnly: true,
+      secure: isProduction, // true en produccion!!!!!
+      sameSite: isProduction? "none":"strict",
+    });
+
+    return res.status(200).json({ message: "Sesión cerrada correctamente" });
+  } catch (error) {
+    console.error("Error al cerrar sesión:", error);
+    return res.status(500).json({ message: "Error al cerrar sesión" });
+  }
+};
+
+const cleanFailedAttempts = async (email) => {
+  await pool.query(`DELETE FROM "FailedLogin" WHERE email = $1`, [email]); 
+}
+

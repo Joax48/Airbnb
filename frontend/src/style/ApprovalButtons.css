@@ -1,0 +1,188 @@
+:root {
+  --admin-bg: #f6f7f9;
+  --admin-surface: #ffffff;
+  --admin-text: #333;
+  --admin-muted: #6b7280;
+  --admin-border: #ddd;
+  --admin-primary: #ff385c;
+  --admin-primary-hover: #e03151;
+  --admin-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --admin-radius: 12px;
+  --admin-input-bg: #fff;
+  --admin-input-border: var(--admin-border);
+  --admin-input-focus: var(--admin-primary);
+}
+
+.container {
+  display: flex;
+  gap: 8px;
+}
+
+.approve-btn,
+.reject-btn,
+.cancel-btn,
+.confirm-btn {
+  padding: 8px 12px;
+  border-radius: var(--admin-radius);
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background 0.2s ease, transform 0.1s ease, opacity 0.2s ease;
+  border: 1px solid var(--admin-border);
+  background: var(--admin-surface);
+  color: var(--admin-text);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.approve-btn {
+  background: var(--admin-primary);
+  color: #fff;
+  border-color: var(--admin-primary);
+}
+
+.approve-btn:hover {
+  background: var(--admin-primary-hover);
+  transform: translateY(-1px);
+}
+
+.reject-btn {
+  background: transparent;
+  color: var(--admin-muted);
+  border: 2px solid var(--admin-primary);
+}
+
+.reject-btn:hover {
+  transform: translateY(-1px);
+}
+
+.cancel-btn {
+  background: var(--admin-bg);
+  color: var(--admin-text);
+}
+
+.cancel-btn:hover {
+  background: var(--admin-surface);
+}
+
+.confirm-btn {
+  background: var(--admin-primary);
+  color: #fff;
+  border-color: var(--admin-primary);
+}
+
+.confirm-btn:hover {
+  background: var(--admin-primary-hover);
+  transform: translateY(-1px);
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  z-index: 50;
+  backdrop-filter: blur(2px);
+}
+
+.modal {
+  background: var(--admin-surface);
+  color: var(--admin-text);
+  padding: 20px 20px 16px;
+  border-radius: var(--admin-radius);
+  width: 480px;
+  max-width: 100%;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--admin-border);
+}
+
+.modal, .modal * {
+  box-sizing: border-box;
+}
+
+.modal-title {
+  margin: 0 0 4px 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.modal-hint {
+  margin: 0 0 8px 0;
+  font-size: 0.85rem;
+  color: var(--admin-muted);
+}
+
+.text-area {
+  display: block;
+  width: 100%;
+  padding: 8px 10px;
+  margin: 8px 0 12px;
+  border-radius: 8px;
+  border: 1px solid var(--admin-border);
+  background: var(--admin-bg);
+  color: var(--admin-text);
+  resize: vertical;
+  min-height: 120px;
+  font-family: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.text-area:focus {
+  outline: none;
+  border-color: var(--admin-primary);
+  box-shadow: 0 0 0 2px rgba(255, 56, 92, 0.2);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.approve-modal { padding: 18px; }
+
+.approve-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--admin-border);
+}
+
+.approve-icon {
+  color: var(--admin-primary);
+  stroke-width: 2;
+}
+
+.approve-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--admin-text);
+}
+
+.approve-text {
+  margin: 0 0 8px 0;
+  color: var(--admin-text);
+  line-height: 1.45;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 600px) {
+  .modal {
+    width: 100%;
+    padding: 16px;
+  }
+
+  .approve-btn,
+  .reject-btn,
+  .cancel-btn,
+  .confirm-btn {
+    font-size: 0.85rem;
+    padding: 6px 10px;
+  }
+}
+

@@ -1,0 +1,89 @@
+.acc-page {
+  margin-top: 40px;
+}
+
+/* BUSCADOR */
+.acc-search-bar {
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: center;
+}
+
+.acc-search-bar input {
+  width: 100%;
+  max-width: 450px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+}
+
+/* FILTROS */
+.acc-filters {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.acc-filters select {
+  padding: 10px 12px;
+  font-size: 1rem;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+}
+
+/* GRID */
+.acc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.acc-card {
+  display: block;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transition: 0.2s;
+  text-decoration: none;
+  color: #000;
+}
+
+.acc-card:hover {
+  transform: translateY(-4px);
+}
+
+.acc-card img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+}
+
+.acc-info {
+  padding: 12px;
+}
+
+.acc-info h3 {
+  margin: 0 0 6px 0;
+}
+
+.acc-location {
+  opacity: 0.7;
+}
+
+.acc-type {
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+
+.acc-price {
+  margin-top: 8px;
+  font-weight: bold;
+}
+
+.acc-empty {
+  text-align: center;
+  opacity: 0.6;
+  margin-top: 30px;
+}

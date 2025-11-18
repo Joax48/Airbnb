@@ -1,0 +1,149 @@
+
+.resource-list-page {
+  max-width: 1200px;
+  margin: 28px auto;
+  padding: 20px;
+  font-family: "Poppins", sans-serif;
+  color: #222;
+}
+
+.resource-list-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.resource-list-header h1 {
+  font-size: 26px;
+  color: #111;
+  margin: 0;
+}
+
+.resource-list-header .subtitle {
+  color: #666;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.resource-card {
+  width: 260px; 
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: 0px 2px 10px rgba(0,0,0,0.1);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.resource-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0px 8px 20px rgba(0,0,0,0.15);
+}
+
+.resource-img-wrapper {
+  width: 100%;
+  overflow: hidden;
+  background: #f6f6f6;
+}
+
+.resource-img-wrapper img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+}
+
+.resource-info {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  overflow: hidden;
+}
+
+.resource-info h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.resource-type {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.resource-price {
+  font-weight: bold;
+  margin-top: 6px;
+  display: block;
+}
+
+.empty-msg {
+  padding: 24px;
+  text-align: center;
+  color: #666;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+}
+
+.view-btn {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: #ff385c;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background 0.15s;
+}
+
+.view-btn:hover { background: #e31e52; }
+
+.resource-list-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.resource-list-meta .chip {
+  font-size: 13px;
+  color: #555;
+  background: #f5f5f6;
+  padding: 6px 10px;
+  border-radius: 999px;
+}
+
+@media (max-width: 900px) {
+  .resource-list-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .resource-img-wrapper {
+    height: 150px;
+  }
+}
