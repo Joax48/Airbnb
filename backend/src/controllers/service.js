@@ -1,6 +1,10 @@
 import { pool } from "../config/db.js";
 import { actorFromReq } from "../utils/actor.js";
-import { logAction } from "../utils/audit.js"; 
+import { logAction } from "../utils/audit.js";
+import {
+  sanitizeBasicField,
+  sanitizeDescriptionField,
+} from "../utils/sanitize.js";
 
 export const getPublicServices = async (req, res) => {
   try {
@@ -14,9 +18,64 @@ export const getPublicServices = async (req, res) => {
 
 export const createService = async (req, res) => {
   const client = await pool.connect();
+
   try {
     const actor = actorFromReq(req);
-    const { name, description, type, price, imageUrl } = req.body;
+    const { name, description = "", type, price, imageUrl } = req.body;
+
+    const errors = [];
+
+    const NAME_MAX = 100;
+    const DESC_MAX = 1000;
+    const PRICE_MAX = 500000;
+
+    const ALLOWED_TYPES = [
+      "Incluida",
+      "Extra opcional",
+      "Transporte al aeropuerto",
+      "Alquiler de bicicletas",
+      "Alquiler de autos",
+      "Desayuno incluido",
+      "Comidas locales",
+      "Catering",
+      "Conserjería",
+      "Organización de eventos",
+      "Paquete de estadía completo",
+    ];
+
+    const cleanName = sanitizeBasicField(name);
+    const cleanType = sanitizeBasicField(type);
+    const cleanDescription = sanitizeDescriptionField(description);
+
+    if (!cleanName || cleanName.length < 3 || cleanName.length > NAME_MAX) {
+      errors.push("Nombre de servicio inválido.");
+    }
+
+    if (cleanDescription.length > DESC_MAX) {
+      errors.push("Descripción demasiado larga.");
+    }
+
+    if (!cleanType) {
+      errors.push("El tipo de servicio es obligatorio.");
+    } else if (!ALLOWED_TYPES.includes(cleanType)) {
+      errors.push("Tipo de servicio inválido.");
+    }
+
+    const priceNumber = Number(price);
+    if (
+      !Number.isFinite(priceNumber) ||
+      priceNumber <= 0 ||
+      priceNumber > PRICE_MAX
+    ) {
+      errors.push("Precio inválido.");
+    }
+
+    if (errors.length > 0) {
+      return res.status(400).json({
+        message: "Datos inválidos para crear servicio",
+        errors,
+      });
+    }
 
     await client.query("BEGIN");
 
@@ -25,7 +84,7 @@ export const createService = async (req, res) => {
         (name, description, type, price, image_url, approved, id_user)
        VALUES ($1, $2, $3, $4, $5, FALSE, $6)
        RETURNING *`,
-      [name, description, type, price, imageUrl, actor.id]
+      [cleanName, cleanDescription, cleanType, priceNumber, imageUrl, actor.id]
     );
 
     const service = result.rows[0];
@@ -46,10 +105,15 @@ export const createService = async (req, res) => {
 
     await client.query("COMMIT");
 
-    res.status(201).json(result.rows[0]);
+    return res.status(201).json(service);
   } catch (error) {
+    try {
+      await client.query("ROLLBACK");
+    } catch (rollbackErr) {
+      console.error("Error haciendo ROLLBACK en createService:", rollbackErr);
+    }
     console.error("Error creando servicio:", error.message);
-    res.status(500).json({ message: "Error al crear servicio" });
+    return res.status(500).json({ message: "Error al crear servicio" });
   } finally {
     client.release();
   }
@@ -78,7 +142,6 @@ export const getServiceById = async (req, res) => {
     }
 
     res.json(service.rows[0]);
-
   } catch (error) {
     console.error("Error getServiceById:", error);
     res.status(500).json({ message: "Error al obtener el servicio" });

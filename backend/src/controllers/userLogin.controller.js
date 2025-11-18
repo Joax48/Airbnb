@@ -48,7 +48,7 @@ export const LogIn = async (req, res) => {
   try {
     const time_left = await verifyBlockedTimeLeft(email, actor);
     if (time_left > 0) {
-      return res.status(429).json( { message: `Demasiados intentos fallidos. Intentelo de nuevo en ` +
+      return res.status(429).json( { message: `Demasiados intentos fallidos. Inténtelo de nuevo en ` +
         `${time_left} minutos`
       });
     }
