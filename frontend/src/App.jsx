@@ -59,7 +59,7 @@ function App() {
           <Route path="/myBookings" element={<ProtectedRoute><MyBookings/></ProtectedRoute>} />
 
 
-          <Route path="/checkout/:type/:id" element={<Checkout/>}/>
+          <Route path="/checkout/:type/:id" element={<ProtectedRoute><Checkout/></ProtectedRoute>}/>
 
 
         <Route path="/unauthorized" element={<h2>No tienes permisos para acceder aquí</h2>} />
