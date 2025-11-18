@@ -1,6 +1,10 @@
 import { pool } from "../config/db.js";
 import { actorFromReq } from "../utils/actor.js";
 import { logAction } from "../utils/audit.js";
+import {
+  sanitizeBasicField,
+  sanitizeDescriptionField,
+} from "../utils/sanitize.js";
 
 export const getPublicProperties = async (req, res) => {
   try {
@@ -14,28 +18,123 @@ export const getPublicProperties = async (req, res) => {
 
 export const createAccommodation = async (req, res) => {
   const client = await pool.connect();
+
   try {
-    const { name, type, description, price, location, imageUrl, amenities } = req.body;
     const actor = actorFromReq(req);
 
-  await client.query("BEGIN");
+    const {
+      name,
+      type,
+      description = "",
+      price,
+      location,
+      imageUrl,
+      amenities,
+    } = req.body;
 
-    const result = await client.query(
-      `INSERT INTO "Property"
+    const errors = [];
+
+    const NAME_MAX = 100;
+    const LOCATION_MAX = 100;
+    const DESC_MAX = 1000;
+    const PRICE_MAX = 500000;
+
+    const ALLOWED_TYPES = [
+      "Casa",
+      "Apartamento",
+      "Villa",
+      "Cabaña",
+      "Habitación privada",
+      "Habitación compartida",
+      "Casa en el árbol",
+      "Barco",
+      "Casa flotante",
+      "Domo",
+    ];
+
+    const cleanName = sanitizeBasicField(name);
+    const cleanType = sanitizeBasicField(type);
+    const cleanLocation = sanitizeBasicField(location);
+    const cleanDescription = sanitizeDescriptionField(description);
+
+    if (!cleanName || cleanName.length < 3 || cleanName.length > NAME_MAX) {
+      errors.push("Nombre de alojamiento inválido.");
+    }
+
+    if (
+      !cleanLocation ||
+      cleanLocation.length < 3 ||
+      cleanLocation.length > LOCATION_MAX
+    ) {
+      errors.push("Ubicación inválida.");
+    }
+
+    if (cleanDescription.length > DESC_MAX) {
+      errors.push("Descripción demasiado larga.");
+    }
+
+    if (!cleanType) {
+      errors.push("El tipo de alojamiento es obligatorio.");
+    } else if (!ALLOWED_TYPES.includes(cleanType)) {
+      errors.push("Tipo de alojamiento inválido.");
+    }
+
+    const priceNumber = Number(price);
+    if (
+      !Number.isFinite(priceNumber) ||
+      priceNumber <= 0 ||
+      priceNumber > PRICE_MAX
+    ) {
+      errors.push("Precio inválido.");
+    }
+
+    let cleanAmenities = [];
+    if (Array.isArray(amenities)) {
+      cleanAmenities = amenities
+        .map((a) => Number(a))
+        .filter((n) => Number.isInteger(n) && n > 0);
+    } else if (amenities != null) {
+      errors.push("Formato de amenidades inválido.");
+    }
+
+    if (errors.length > 0) {
+      return res.status(400).json({
+        message: "Datos inválidos para crear alojamiento",
+        errors,
+      });
+    }
+
+    await client.query("BEGIN");
+
+    const insertQuery = `
+      INSERT INTO "Property"
         (name, type, description, price, location, image_url, approved, status, id_user)
-       VALUES ($1,$2,$3,$4,$5,$6,FALSE,'pending',$7)
-       RETURNING *`,
-      [name, type, description, price, location, imageUrl, actor.id]
-    );
+      VALUES ($1, $2, $3, $4, $5, $6, FALSE, 'pending', $7)
+      RETURNING *;
+    `;
+
+    const result = await client.query(insertQuery, [
+      cleanName,
+      cleanType,
+      cleanDescription,
+      priceNumber,
+      cleanLocation,
+      imageUrl,
+      actor.id,
+    ]);
 
     const property = result.rows[0];
 
-    if (amenities && amenities.length > 0) {
-      for (let a of amenities) {
-        await client.query(
-          `INSERT INTO "Property_Amenity" (id_property, id_amenity) VALUES ($1, $2)`,
-          [property.id_property, a]
-        );
+    if (cleanAmenities.length > 0) {
+      const insertAmenityQuery = `
+        INSERT INTO "Property_Amenity" (id_property, id_amenity)
+        VALUES ($1, $2);
+      `;
+      for (const amenityId of cleanAmenities) {
+        await client.query(insertAmenityQuery, [
+          property.id_property,
+          amenityId,
+        ]);
       }
     }
 
@@ -56,11 +155,15 @@ export const createAccommodation = async (req, res) => {
 
     await client.query("COMMIT");
 
-    res.status(201).json({ message: "Alojamiento creado", propertyId: property.propertyId, });
-
+    return res.status(201).json(property);
   } catch (error) {
+    try {
+      await client.query("ROLLBACK");
+    } catch (rollbackErr) {
+      console.error("Error haciendo ROLLBACK en createAccommodation:", rollbackErr);
+    }
     console.error("Error creando alojamiento:", error);
-    res.status(500).json({ message: "Error al crear alojamiento" });
+    return res.status(500).json({ message: "Error al crear alojamiento" });
   } finally {
     client.release();
   }

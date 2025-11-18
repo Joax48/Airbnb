@@ -7,6 +7,48 @@ import "../../style/ServiceForm.css";
 
 axios.defaults.withCredentials = true;
 
+const NAME_MAX = 100;
+const DESC_MAX = 1000;
+const PRICE_MAX = 500000;
+const MIN_SUBMIT_TIME_MS = 800;
+
+const stripControlChars = (str) => {
+  if (typeof str !== "string") return "";
+  return str
+    .normalize("NFC")
+    .replace(/[\x00-\x1F\x7F]/g, "") 
+    .replace(/[\u200B-\u200F\u202A-\u202E\u2060\uFEFF]/g, "");
+};
+
+const sanitizeBasicField = (str) => {
+  if (typeof str !== "string") return "";
+  let out = stripControlChars(str);
+  out = out.trim().replace(/\s+/g, " ");
+  out = out.replace(/[<>`]/g, "");
+  return out;
+};
+
+const sanitizeDescriptionField = (str) => {
+  if (typeof str !== "string") return "";
+  let out = stripControlChars(str);
+  out = out.trim().replace(/\s+/g, " ");
+  return out;
+};
+
+const ALLOWED_TYPES = [
+  "Limpieza incluida",
+  "Limpieza extra",
+  "Transporte al aeropuerto",
+  "Alquiler de bicicletas",
+  "Alquiler de autos",
+  "Desayuno incluido",
+  "Comidas locales",
+  "Servicio de catering",
+  "Conserjería",
+  "Organización de eventos",
+  "Paquete completo",
+];
+
 const ServiceForm = () => {
   const [form, setForm] = useState({
     name: "",
@@ -79,15 +121,46 @@ const ServiceForm = () => {
     e.preventDefault();
     setMessage("");
 
-    if (form.price <= 0) {
+    const start = Date.now();
+
+    const name = sanitizeBasicField(form.name);
+    const type = sanitizeBasicField(form.type);
+    const description = sanitizeDescriptionField(form.description);
+    const priceNumber = Number(form.price);
+
+    if (name.length < 3 || name.length > NAME_MAX) {
       setIsSuccess(false);
-      setMessage("El precio debe ser mayor que 0.");
+      setMessage(`El nombre debe tener entre 3 y ${NAME_MAX} caracteres.`);
       return;
     }
 
-    if (!form.name.trim() || !form.type.trim()) {
+    if (description.length > DESC_MAX) {
       setIsSuccess(false);
-      setMessage("Completa los campos obligatorios.");
+      setMessage(`La descripción no puede exceder ${DESC_MAX} caracteres.`);
+      return;
+    }
+
+    if (!type) {
+      setIsSuccess(false);
+      setMessage("El tipo de servicio es obligatorio.");
+      return;
+    }
+
+    if (!ALLOWED_TYPES.includes(type)) {
+      setIsSuccess(false);
+      setMessage("Tipo de servicio inválido.");
+      return;
+    }
+
+    if (!Number.isFinite(priceNumber)) {
+      setIsSuccess(false);
+      setMessage("El precio debe ser un número válido.");
+      return;
+    }
+
+    if (priceNumber <= 0 || priceNumber > PRICE_MAX) {
+      setIsSuccess(false);
+      setMessage(`El precio debe estar entre 1 y ${PRICE_MAX}.`);
       return;
     }
 
@@ -96,7 +169,14 @@ const ServiceForm = () => {
     try {
       const imageUrl = await uploadToCloudinary();
 
-      const body = { ...form, imageUrl };
+      const body = {
+        ...form,
+        name,
+        type,
+        description,
+        price: priceNumber,
+        imageUrl,
+      };
 
       await axios.post("http://localhost:4000/api/services", body);
 
@@ -116,17 +196,20 @@ const ServiceForm = () => {
       });
       setImageFile(null);
     } catch (error) {
+      console.error(error);
       setIsSuccess(false);
       setMessage("Error al registrar servicio");
     } finally {
-      setLoading(false);
+      const elapsed = Date.now() - start;
+      const remaining = Math.max(0, MIN_SUBMIT_TIME_MS - elapsed);
+      setTimeout(() => setLoading(false), remaining);
     }
   };
 
   return (
     <div className="Service-page">
       <Navbar />
-      
+
       <form className="basic-form" onSubmit={handleSubmit}>
         <BackButton to="/" />
         <h2>Registrar Servicio</h2>
@@ -145,6 +228,7 @@ const ServiceForm = () => {
             value={form.name}
             onChange={handleChange}
             required
+            maxLength={NAME_MAX}
           />
         </div>
 
@@ -165,8 +249,12 @@ const ServiceForm = () => {
             </optgroup>
 
             <optgroup label="Transporte">
-              <option value="Transporte al aeropuerto">Transporte al aeropuerto</option>
-              <option value="Alquiler de bicicletas">Alquiler de bicicletas</option>
+              <option value="Transporte al aeropuerto">
+                Transporte al aeropuerto
+              </option>
+              <option value="Alquiler de bicicletas">
+                Alquiler de bicicletas
+              </option>
               <option value="Alquiler de autos">Alquiler de autos</option>
             </optgroup>
 
@@ -178,10 +266,13 @@ const ServiceForm = () => {
 
             <optgroup label="Servicios premium">
               <option value="Conserjería">Conserjería</option>
-              <option value="Organización de eventos">Organización de eventos</option>
-              <option value="Paquete completo">Paquete de estadía completa</option>
+              <option value="Organización de eventos">
+                Organización de eventos
+              </option>
+              <option value="Paquete completo">
+                Paquete de estadía completa
+              </option>
             </optgroup>
-
           </select>
         </div>
 
@@ -194,6 +285,7 @@ const ServiceForm = () => {
             value={form.price}
             onChange={handleChange}
             min="1"
+            max={PRICE_MAX}
             required
           />
         </div>
@@ -206,6 +298,7 @@ const ServiceForm = () => {
             value={form.description}
             onChange={handleChange}
             rows="4"
+            maxLength={DESC_MAX}
           />
         </div>
 

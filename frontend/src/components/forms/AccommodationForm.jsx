@@ -6,6 +6,48 @@ import BackButton from "../BackButton";
 import Navbar from "../Navbar";
 import "../../style/AccommodationForm.css";
 
+const NAME_MAX = 100;
+const LOCATION_MAX = 100;
+const DESC_MAX = 1000;
+const PRICE_MAX = 500000;
+const MIN_SUBMIT_TIME_MS = 800;
+
+const stripControlChars = (str) => {
+  if (typeof str !== "string") return "";
+  return str
+    .normalize("NFC")
+    .replace(/[\x00-\x1F\x7F]/g, "") 
+    .replace(/[\u200B-\u200F\u202A-\u202E\u2060\uFEFF]/g, ""); 
+};
+
+const sanitizeBasicField = (str) => {
+  if (typeof str !== "string") return "";
+  let out = stripControlChars(str);
+  out = out.trim().replace(/\s+/g, " ");
+  out = out.replace(/[<>`]/g, "");
+  return out;
+};
+
+const sanitizeDescriptionField = (str) => {
+  if (typeof str !== "string") return "";
+  let out = stripControlChars(str);
+  out = out.trim().replace(/\s+/g, " ");
+  return out;
+};
+
+const ALLOWED_TYPES = [
+  "Casa",
+  "Apartamento",
+  "Villa",
+  "Cabaña",
+  "Habitación privada",
+  "Habitación compartida",
+  "Casa en el árbol",
+  "Barco",
+  "Casa flotante",
+  "Domo",
+];
+
 const AccommodationForm = () => {
   const [form, setForm] = useState({
     name: "",
@@ -81,13 +123,57 @@ const AccommodationForm = () => {
     e.preventDefault();
     setMessage("");
 
-    if (form.price <= 0) {
+    const start = Date.now();
+
+    const name = sanitizeBasicField(form.name);
+    const type = sanitizeBasicField(form.type);
+    const location = sanitizeBasicField(form.location);
+    const description = sanitizeDescriptionField(form.description);
+    const priceNumber = Number(form.price);
+
+    if (name.length < 3 || name.length > NAME_MAX) {
       setIsSuccess(false);
-      setMessage("El precio debe ser mayor que 0.");
+      setMessage(`El nombre debe tener al menos 3 caracteres.`);
       return;
     }
 
-    if (!form.name.trim() || !form.type.trim() || !form.location.trim()) {
+    if (location.length < 3 || location.length > LOCATION_MAX) {
+      setIsSuccess(false);
+      setMessage(`La ubicación debe tener al menos 3 caracteres.`);
+      return;
+    }
+
+    if (description.length > DESC_MAX) {
+      setIsSuccess(false);
+      setMessage(`La descripción excede ${DESC_MAX} caracteres.`);
+      return;
+    }
+
+    if (!type) {
+      setIsSuccess(false);
+      setMessage("El tipo de alojamiento es obligatorio.");
+      return;
+    }
+
+    if (!ALLOWED_TYPES.includes(type)) {
+      setIsSuccess(false);
+      setMessage("Tipo de alojamiento inválido.");
+      return;
+    }
+
+    if (!Number.isFinite(priceNumber)) {
+      setIsSuccess(false);
+      setMessage("El precio debe ser un número válido.");
+      return;
+    }
+
+    if (priceNumber <= 0 || priceNumber > PRICE_MAX) {
+      setIsSuccess(false);
+      setMessage(`El precio es inválido.`);
+      return;
+    }
+
+    if (!name || !type || !location) {
       setIsSuccess(false);
       setMessage("Por favor completa todos los campos obligatorios.");
       return;
@@ -100,14 +186,16 @@ const AccommodationForm = () => {
 
       const dataToSend = {
         ...form,
+        name,
+        type,
+        location,
+        description,
+        price: priceNumber,
         imageUrl,
         amenities: selectedAmenities,
       };
 
-      const res = await axios.post(
-        "http://localhost:4000/api/properties",
-        dataToSend
-      );
+      await axios.post("http://localhost:4000/api/properties", dataToSend);
 
       setIsSuccess(true);
       setMessage("Alojamiento creado correctamente");
@@ -116,7 +204,6 @@ const AccommodationForm = () => {
         navigate("/");
       }, 2000);
 
-      // Reset form
       setForm({
         name: "",
         type: "",
@@ -127,13 +214,14 @@ const AccommodationForm = () => {
       });
       setImageFile(null);
       setSelectedAmenities([]);
-
     } catch (error) {
-      console.log(error);
+      console.error(error);
       setIsSuccess(false);
       setMessage("Error al crear alojamiento");
     } finally {
-      setLoading(false);
+      const elapsed = Date.now() - start;
+      const remaining = Math.max(0, MIN_SUBMIT_TIME_MS - elapsed);
+      setTimeout(() => setLoading(false), remaining);
     }
   };
 
@@ -166,6 +254,7 @@ const AccommodationForm = () => {
             value={form.name}
             onChange={handleChange}
             required
+            maxLength={NAME_MAX}
           />
         </div>
 
@@ -252,6 +341,7 @@ const AccommodationForm = () => {
             value={form.location}
             onChange={handleChange}
             required
+            maxLength={LOCATION_MAX}
           />
         </div>
 
@@ -260,10 +350,11 @@ const AccommodationForm = () => {
           <input
             type="number"
             name="price"
-            placeholder="Ej: 75.000"
+            placeholder="Ej: 75000"
             value={form.price}
             onChange={handleChange}
             min="1"
+            max={PRICE_MAX}
             required
           />
         </div>
@@ -276,6 +367,7 @@ const AccommodationForm = () => {
             value={form.description}
             onChange={handleChange}
             rows="4"
+            maxLength={DESC_MAX}
           />
         </div>
 
