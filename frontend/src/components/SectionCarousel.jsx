@@ -2,10 +2,11 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "../style/SectionCarousel.css";
 
-const SectionCarousel = ({ title, items, type }) => {
-    const formatPrice = (price) => {
+const SectionCarousel = ({ title, items, type, limit = 5 }) => {
+  const formatPrice = (price) => {
     return "₡" + Number(price).toLocaleString("es-CR");
   };
+
   return (
     <section className="carousel-section">
       <div className="carousel-header">
@@ -15,7 +16,7 @@ const SectionCarousel = ({ title, items, type }) => {
 
       <div className="carousel-container">
         {items.length > 0 ? (
-          items.map((item) => {
+          items.slice(0, limit).map((item) => {
             const id =
               item.id_property ||
               item.id_activity ||
@@ -56,5 +57,6 @@ const SectionCarousel = ({ title, items, type }) => {
     </section>
   );
 };
+
 
 export default SectionCarousel;
