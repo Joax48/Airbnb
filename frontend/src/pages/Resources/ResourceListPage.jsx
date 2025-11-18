@@ -5,6 +5,8 @@ import Navbar from "../../components/Navbar";
 import Container from "../../components/Container";
 import "../../style/ResourceListPage.css";
 
+const API = import.meta.env.VITE_IP_SERVER;
+
 const ResourceListPage = () => {
   const [params] = useSearchParams();
 
@@ -30,7 +32,7 @@ const ResourceListPage = () => {
             ? "/api/activities"
             : "/api/services";
 
-        const res = await axios.get(`http://localhost:4000${endpoint}`);
+        const res = await axios.get(`${API}${endpoint}`);
 
         const filtered = res.data.filter((item) => {
           const itemType = (item.type || item.category || "").toLowerCase();

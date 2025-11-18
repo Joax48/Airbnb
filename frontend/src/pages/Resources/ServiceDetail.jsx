@@ -12,6 +12,8 @@ import Container from "../../components/Container";
 
 import "../../style/ResourceDetail.css";
 
+const API = import.meta.env.VITE_IP_SERVER;
+
 const ServiceDetail = () => {
   const { id } = useParams();
   const [service, setService] = useState(null);
@@ -26,7 +28,7 @@ const ServiceDetail = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:4000/api/services/${id}`)
+      .get(`${API}/api/services/${id}`)
       .then((res) => setService(res.data))
       .catch(console.error);
   }, [id]);

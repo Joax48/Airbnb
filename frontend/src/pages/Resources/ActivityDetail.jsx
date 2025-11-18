@@ -12,6 +12,8 @@ import Container from "../../components/Container";
 
 import "../../style/ResourceDetail.css";
 
+const API = import.meta.env.VITE_IP_SERVER;
+
 const ActivityDetail = () => {
   const { id } = useParams();
   const [activity, setActivity] = useState(null);
@@ -23,7 +25,7 @@ const ActivityDetail = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:4000/api/activities/${id}`)
+      .get(`${API}/api/activities/${id}`)
       .then((res) => setActivity(res.data))
       .catch(console.error);
   }, [id]);

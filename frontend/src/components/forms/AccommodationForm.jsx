@@ -12,6 +12,8 @@ const DESC_MAX = 1000;
 const PRICE_MAX = 500000;
 const MIN_SUBMIT_TIME_MS = 800;
 
+const API = import.meta.env.VITE_IP_SERVER;
+
 const stripControlChars = (str) => {
   if (typeof str !== "string") return "";
   return str
@@ -97,7 +99,7 @@ const AccommodationForm = () => {
     if (!imageFile) return "";
 
     const sigRes = await axios.get(
-      "http://localhost:4000/api/uploads/signature?folder=properties",
+      `${API}/api/uploads/signature?folder=properties`,
       { withCredentials: true }
     );
 
@@ -195,7 +197,7 @@ const AccommodationForm = () => {
         amenities: selectedAmenities,
       };
 
-      await axios.post("http://localhost:4000/api/properties", dataToSend);
+      await axios.post(`${API}/api/properties`, dataToSend);
 
       setIsSuccess(true);
       setMessage("Alojamiento creado correctamente");
@@ -227,7 +229,7 @@ const AccommodationForm = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:4000/api/amenities")
+      .get(`${API}/api/amenities`)
       .then((res) => setAmenities(res.data))
       .catch((err) => console.log(err));
   }, []);

@@ -2,12 +2,14 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 axios.defaults.withCredentials = true;
 
+const API = import.meta.env.VITE_IP_SERVER;
+
 export const useSaved = () => {
   const [saved, setSaved] = useState([]);
 
   const loadSaved = async () => {
     try {
-      const res = await axios.get("http://localhost:4000/api/saved");
+      const res = await axios.get(`${API}/api/saved`);
       setSaved(res.data);
     } catch (err) {
       console.error("Error cargando guardados", err);
@@ -16,7 +18,7 @@ export const useSaved = () => {
 
   const toggleSave = async (type, item_id) => {
     try {
-      const res = await axios.post("http://localhost:4000/api/saved/toggle", {
+      const res = await axios.post(`${API}/api/saved/toggle`, {
         type,
         item_id,
       });

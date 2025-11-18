@@ -5,6 +5,8 @@ import SectionCarousel from "../../components/SectionCarousel";
 import Container from "../../components/Container";
 import "../../style/HomePage.css";
 
+const API = import.meta.env.VITE_IP_SERVER;
+
 const Home = () => {
   const [properties, setProperties] = useState([]);
   const [activities, setActivities] = useState([]);
@@ -17,7 +19,7 @@ const Home = () => {
 
   const fetchProperties = async () => {
     try {
-      const res = await axios.get("http://localhost:4000/api/properties");
+      const res = await axios.get(`${API}/api/properties`);
       setProperties(res.data);
       setFilteredProperties(res.data);
     } catch (error) {
@@ -27,7 +29,7 @@ const Home = () => {
 
   const fetchActivities = async () => {
     try {
-      const res = await axios.get("http://localhost:4000/api/activities");
+      const res = await axios.get(`${API}/api/activities`);
       setActivities(res.data);
       setFilteredActivities(res.data);
     } catch (error) {
@@ -37,7 +39,7 @@ const Home = () => {
 
   const fetchServices = async () => {
     try {
-      const res = await axios.get("http://localhost:4000/api/services");
+      const res = await axios.get(`${API}/api/services`);
       setServices(res.data);
       setFilteredServices(res.data);
     } catch (error) {

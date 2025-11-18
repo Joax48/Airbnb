@@ -6,6 +6,8 @@ import { FaRegClock } from "react-icons/fa";
 
 import "../../style/MyBookings.css";
 
+const API = import.meta.env.VITE_IP_SERVER;
+
 const MyBookings = () => {
   const [bookings, setBookings] = useState([]);
   const [filterType, setFilterType] = useState("all");
@@ -13,7 +15,7 @@ const MyBookings = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:4000/api/bookings/my", { withCredentials: true })
+      .get(`${API}/api/bookings/my`, { withCredentials: true })
       .then((res) => {
         const sorted = res.data.sort(
           (a, b) => new Date(b.date_start) - new Date(a.date_start)

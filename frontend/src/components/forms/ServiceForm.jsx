@@ -12,6 +12,8 @@ const DESC_MAX = 1000;
 const PRICE_MAX = 500000;
 const MIN_SUBMIT_TIME_MS = 800;
 
+const API = import.meta.env.VITE_IP_SERVER;
+
 const stripControlChars = (str) => {
   if (typeof str !== "string") return "";
   return str
@@ -95,7 +97,7 @@ const ServiceForm = () => {
     if (!imageFile) return "";
 
     const sigRes = await axios.get(
-      "http://localhost:4000/api/uploads/signature?folder=services",
+      `${API}/api/uploads/signature?folder=services`,
       { withCredentials: true }
     );
 
@@ -178,7 +180,7 @@ const ServiceForm = () => {
         imageUrl,
       };
 
-      await axios.post("http://localhost:4000/api/services", body);
+      await axios.post(`${API}/api/services`, body);
 
       setIsSuccess(true);
       setMessage("Servicio registrado correctamente");

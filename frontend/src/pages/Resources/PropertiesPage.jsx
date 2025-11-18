@@ -6,13 +6,15 @@ import SearchBar from "../../components/SearchBar";
 import ResourceCarousel from "../../components/ResourceCarousel";
 import "../../style/AccommodationsPage.css";
 
+const API = import.meta.env.VITE_IP_SERVER;
+
 const AccommodationsPage = () => {
   const [properties, setProperties] = useState([]);
   const [filtered, setFiltered] = useState([]);
 
   useEffect(() => {
     axios
-      .get("http://localhost:4000/api/properties")
+      .get(`${API}/api/properties`)
       .then((res) => {
         setProperties(res.data);
         setFiltered(res.data);

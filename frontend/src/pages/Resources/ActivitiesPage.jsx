@@ -5,13 +5,15 @@ import Container from "../../components/Container";
 import SearchBar from "../../components/SearchBar";
 import ResourceCarousel from "../../components/ResourceCarousel";
 
+const API = import.meta.env.VITE_IP_SERVER;
+
 const ActivitiesPage = () => {
   const [activities, setActivities] = useState([]);
   const [filtered, setFiltered] = useState([]);
 
   useEffect(() => {
     axios
-      .get("http://localhost:4000/api/activities")
+      .get(`${API}/api/activities`)
       .then((res) => {
         setActivities(res.data);
         setFiltered(res.data);

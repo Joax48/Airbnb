@@ -13,6 +13,8 @@ const DESC_MAX = 1000;
 const PRICE_MAX = 500000;
 const MIN_SUBMIT_TIME_MS = 800;
 
+const API = import.meta.env.VITE_IP_SERVER;
+
 const stripControlChars = (str) => {
   if (typeof str !== "string") return "";
   return str
@@ -100,7 +102,7 @@ const ActivityForm = () => {
     if (!imageFile) return "";
 
     const sigRes = await axios.get(
-      "http://localhost:4000/api/uploads/signature?folder=activities",
+      `${API}/api/uploads/signature?folder=activities`,
       { withCredentials: true }
     );
 
@@ -212,7 +214,7 @@ const ActivityForm = () => {
         imageUrl,
       };
 
-      await axios.post("http://localhost:4000/api/activities", dataToSend);
+      await axios.post(`${API}/api/activities`, dataToSend);
 
       setIsSuccess(true);
       setMessage("Actividad creada correctamente");

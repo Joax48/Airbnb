@@ -3,6 +3,8 @@ import axios from "axios";
 import { useParams, useNavigate  } from "react-router-dom";
 import "../../style/CheckoutForm.css";
 
+const API = import.meta.env.VITE_IP_SERVER;
+
 const PaymentForm = ({ bookingId, date_start, date_end, onSuccess }) => {
   const [method, setMethod] = useState("VISA");
   const [cardNumber, setCardNumber] = useState("");
@@ -30,7 +32,7 @@ const PaymentForm = ({ bookingId, date_start, date_end, onSuccess }) => {
 
   try {
     const res = await axios.post(
-      "http://localhost:4000/api/checkout/confirm",
+      `${API}/api/checkout/confirm`,
       {
         idResource: bookingId,
         reservationType,

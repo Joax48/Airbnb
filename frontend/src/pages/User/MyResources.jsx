@@ -7,6 +7,8 @@ import Container from "../../components/Container";
 import BackButton from "../../components/BackButton";
 import "../../style/MyResources.css";
 
+const API = import.meta.env.VITE_IP_SERVER;
+
 const MyResourcesPage = () => {
   const { user } = useAuth();
   const [resources, setResources] = useState([]);
@@ -19,7 +21,7 @@ const MyResourcesPage = () => {
     if (!user) return;
 
     axios
-      .get(`http://localhost:4000/api/resources/by-user/${user.id_user}`)
+      .get(`${API}/api/resources/by-user/${user.id_user}`)
       .then((res) => setResources(res.data))
       .catch((err) => console.error(err));
   }, [user]);

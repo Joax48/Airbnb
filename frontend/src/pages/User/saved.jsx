@@ -7,6 +7,8 @@ import BackButton from "../../components/BackButton";
 import Navbar from "../../components/Navbar";
 import Container from "../../components/Container";
 
+const API = import.meta.env.VITE_IP_SERVER;
+
 const SavedPage = () => {
   const { saved, toggleSave } = useSaved();
   const [fullData, setFullData] = useState([]);
@@ -20,7 +22,7 @@ const SavedPage = () => {
         saved.map(async (item) => {
           try {
             const res = await axios.get(
-              `http://localhost:4000/api/${item.item_type}/${item.item_id}`
+              `${API}/api/${item.item_type}/${item.item_id}`
             );
             return { ...item, data: res.data };
           } catch {

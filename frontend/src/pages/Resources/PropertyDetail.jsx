@@ -25,6 +25,8 @@ import Container from "../../components/Container";
 
 import "../../style/ResourceDetail.css";
 
+const API = import.meta.env.VITE_IP_SERVER;
+
 const PropertyDetail = () => {
   const { id } = useParams();
   const [property, setProperty] = useState(null);
@@ -49,7 +51,7 @@ const PropertyDetail = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:4000/api/properties/${id}`)
+      .get(`${API}/api/properties/${id}`)
       .then((res) => setProperty(res.data))
       .catch(console.error);
   }, [id]);
