@@ -71,6 +71,32 @@ const PropertyDetail = () => {
     await toggleSave("properties", realId);
     loadSaved();
   };
+const handleReserve = () => {
+  if (!isAuthenticated) {
+    setShowLogin(true);
+    return;
+  }
+
+  if (!property.startDate || !property.endDate || !property.nights) {
+    alert("Debes seleccionar fechas antes de reservar.");
+    return;
+  }
+
+  navigate(`/checkout/properties/${id}`, {
+    state: {
+      startDate: property.startDate,
+      endDate: property.endDate,
+      nights: property.nights,
+      price: property.price,
+      total: property.price * property.nights,
+      title: property.name,
+      image: property.image_url,
+      location: property.location,
+    },
+  });
+};
+
+
 
   const formatPrice = (n) => "₡" + Number(n).toLocaleString("es-CR");
 
@@ -216,25 +242,10 @@ const PropertyDetail = () => {
 
                 {property.approved ? ( 
                   <> 
-                   <button
-                      className="reserve-btn large"
-                      onClick={() => {
-                        navigate(`/checkout/properties/${id}`, {
-                          state: {
-                            startDate: property.startDate,
-                            endDate: property.endDate,
-                            nights: property.nights,
-                            price: property.price,
-                            total: property.price * property.nights,
-                            title: property.name,
-                            image: property.image_url,
-                            location: property.location
-                          }
-                        });
-                      }}
-                    >
-                      Reservar
-                    </button>
+                <button className="reserve-btn large" onClick={handleReserve}>
+                  Reservar
+                </button>
+
 
                 <p className="no-charge">No se hará ningún cargo por ahora.</p></>) :  (
                   <p

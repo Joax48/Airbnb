@@ -43,6 +43,26 @@ const ActivityDetail = () => {
     loadSaved();
   };
 
+  const handleReserve = () => {
+  if (!isAuthenticated) {
+    setShowLogin(true);
+    return;
+  }
+
+  navigate(`/checkout/activities/${id}`, {
+    state: {
+      startDate: activity.date,
+      endDate: activity.date,
+      nights: 1,
+      price: activity.price,
+      total: activity.price,
+      title: activity.name,
+      image: activity.image_url,
+      location: activity.location,
+    },
+  });
+};
+
   const formatPrice = (p) => "₡" + Number(p).toLocaleString("es-CR");
 
   return (
@@ -114,26 +134,10 @@ const ActivityDetail = () => {
                   <h3>Total: {formatPrice(activity.price)}</h3>
                 </div>
 
-                
-                  <button
-                    className="reserve-btn large"
-                    onClick={() => {
-                      navigate(`/checkout/activities/${id}`, {
-                        state: {
-                          startDate: activity.date,
-                          endDate: activity.date,
-                          nights: 1,
-                          price: activity.price,
-                          total: activity.price,
-                          title: activity.name,
-                          image: activity.image_url,
-                          location: activity.location
-                        }
-                      });
-                    }}
-                  >
-                    Reservar
-                  </button>
+                <button className="reserve-btn large" onClick={handleReserve}>
+                  Reservar
+                </button>
+
 
                   <p className="no-charge">No se hará ningún cargo por ahora.</p></>
                 ): (
