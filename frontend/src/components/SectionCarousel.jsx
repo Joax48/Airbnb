@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "../style/SectionCarousel.css";
 
-const SectionCarousel = ({ title, items, type, limit = 5 }) => {
+const SectionCarousel = ({ title, items, type, limit = 4 }) => {
   const formatPrice = (price) => {
     return "₡" + Number(price).toLocaleString("es-CR");
   };
@@ -11,7 +11,7 @@ const SectionCarousel = ({ title, items, type, limit = 5 }) => {
     <section className="carousel-section">
       <div className="carousel-header">
         <h2>{title}</h2>
-        <a href={`/${type}`} className="view-more">Ver más →</a>
+        <Link to={`/${type}`} className="view-more">Ver más →</Link>
       </div>
 
       <div className="carousel-container">

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 import Container from "../../components/Container";
 import { FaRegClock } from "react-icons/fa";
@@ -12,6 +13,7 @@ const MyBookings = () => {
   const [bookings, setBookings] = useState([]);
   const [filterType, setFilterType] = useState("all");
   const [filtered, setFiltered] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -52,7 +54,6 @@ const MyBookings = () => {
   };
 
   const getName = (b) => b.resource_name;
-
   const getImage = (b) => b.resource_image;
 
   return (
@@ -83,14 +84,14 @@ const MyBookings = () => {
               {filtered.map((b) => (
                 <div key={b.id_booking} className="booking-card">
 
-                  {/* COLUMNA 1 — Imagen */}
+                  {/* Imagen */}
                   <img
                     src={getImage(b)}
                     alt={getName(b)}
                     className="booking-img"
                   />
 
-                  {/* COLUMNA 2 — Información */}
+                  {/* Información */}
                   <div className="booking-info">
                     <h3 className="booking-title">{getName(b)}</h3>
                     <p className="booking-type">{getType(b)}</p>
@@ -110,19 +111,17 @@ const MyBookings = () => {
                     </p>
                   </div>
 
-                  {/* COLUMNA 3 — Botón Reagendar */}
+                  {/* Botón Reagendar */}
                   <div className="booking-actions">
                     <button
                       className="booking-reschedule-btn"
                       onClick={() => {
                         if (b.item_type === "property")
-                          window.location.href = `/properties/${b.item_id}`;
-
-                        if (b.item_type === "activity")
-                          window.location.href = `/activities/${b.item_id}`;
-
-                        if (b.item_type === "service")
-                          window.location.href = `/services/${b.item_id}`;
+                          navigate(`/properties/${b.item_id}`);
+                        else if (b.item_type === "activity")
+                          navigate(`/activities/${b.item_id}`);
+                        else if (b.item_type === "service")
+                          navigate(`/services/${b.item_id}`);
                       }}
                     >
                       <FaRegClock className="booking-icon" />
