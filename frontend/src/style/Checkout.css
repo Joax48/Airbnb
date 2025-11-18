@@ -1,0 +1,65 @@
+/* --- CONTENEDOR PRINCIPAL --- */
+.checkout-container {
+  display: flex;
+  gap: 2rem;
+  padding: 2rem 0;
+  width: 100%;
+  max-width: 1200px;
+  margin: auto;
+}
+
+/* --- COLUMNA IZQUIERDA (FORMULARIO DE PAGO) --- */
+.checkout-left {
+  flex: 2;
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+/* --- COLUMNA DERECHA (RESUMEN DE RESERVA) --- */
+.checkout-right {
+  flex: 1.2;
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 16px;
+  height: fit-content;
+  position: sticky;
+  top: 110px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+/* --- TIPOGRAFÍA GENERAL --- */
+.checkout-container h2,
+.checkout-container h3 {
+  color: #222;
+  margin-bottom: 0.5rem;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 1024px) {
+  .checkout-container {
+    flex-direction: column;
+  }
+
+  .checkout-left,
+  .checkout-right {
+    width: 100%;
+  }
+
+  .checkout-right {
+    position: static;
+    margin-top: 1rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .checkout-container {
+    padding: 1rem 0;
+  }
+
+  .checkout-left,
+  .checkout-right {
+    padding: 1.5rem;
+  }
+}

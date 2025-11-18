@@ -40,7 +40,7 @@ export const createAccommodation = async (req, res) => {
     }
 
     await logAction(client, {
-      action: "CREATE on PROPERTY",
+      action: "[Property]: New listing added successfully",
       entityType: "Property",
       entityId: property.id_property,
       before: null,
@@ -70,7 +70,6 @@ export const getPropertyById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    // Obtener propiedad + info del host
     const property = await pool.query(
       `
       SELECT

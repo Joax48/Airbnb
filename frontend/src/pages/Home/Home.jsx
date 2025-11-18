@@ -1,59 +1,115 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "../../components/Navbar";
-import SearchBar from "../../components/SearchBar";
 import SectionCarousel from "../../components/SectionCarousel";
 import Container from "../../components/Container";
 import "../../style/HomePage.css";
 
 const Home = () => {
   const [properties, setProperties] = useState([]);
-  const [filtered, setFiltered] = useState([]);
+  const [activities, setActivities] = useState([]);
+  const [services, setServices] = useState([]);
+
+  const [filteredProperties, setFilteredProperties] = useState([]);
+  const [filteredActivities, setFilteredActivities] = useState([]);
+  const [filteredServices, setFilteredServices] = useState([]);
+
 
   const fetchProperties = async () => {
     try {
       const res = await axios.get("http://localhost:4000/api/properties");
       setProperties(res.data);
-      setFiltered(res.data);
+      setFilteredProperties(res.data);
     } catch (error) {
-      console.error("Error al cargar alojamientos:", error);
+      console.error("Error al cargar propiedades:", error);
     }
   };
 
-  const handleSearch = (filters) => {
-    let result = properties;
-    if (filters.location) {
-      result = result.filter((p) =>
-        p.location.toLowerCase().includes(filters.location.toLowerCase())
-      );
+  const fetchActivities = async () => {
+    try {
+      const res = await axios.get("http://localhost:4000/api/activities");
+      setActivities(res.data);
+      setFilteredActivities(res.data);
+    } catch (error) {
+      console.error("Error al cargar actividades:", error);
     }
-    if (filters.type) {
-      result = result.filter(
-        (p) => p.type.toLowerCase() === filters.type.toLowerCase()
-      );
+  };
+
+  const fetchServices = async () => {
+    try {
+      const res = await axios.get("http://localhost:4000/api/services");
+      setServices(res.data);
+      setFilteredServices(res.data);
+    } catch (error) {
+      console.error("Error al cargar servicios:", error);
     }
-    setFiltered(result);
   };
 
   useEffect(() => {
     fetchProperties();
+    fetchActivities();
+    fetchServices();
   }, []);
 
-  const casas = filtered.filter((p) => p.type.toLowerCase() === "casa");
-  const apartamentos = filtered.filter((p) => p.type.toLowerCase() === "apartamento");
-  const cabañas = filtered.filter((p) => p.type.toLowerCase() === "cabaña");
+
+  // --- PROPIEDADES ---
+  const casas = filteredProperties.filter((p) => p.type.toLowerCase() === "casa");
+  const apartamentos = filteredProperties.filter(
+    (p) => p.type.toLowerCase() === "apartamento"
+  );
+
+  // --- ACTIVIDADES ---
+  const actividadesPopulares = filteredActivities.slice(0, 10);
+  const actividadesDestacadas = filteredActivities.slice(10, 20);
+
+  // --- SERVICIOS ---
+  const serviciosRecomendados = filteredServices.slice(0, 10);
+  const serviciosPopulares = filteredServices.slice(10, 20);
 
   return (
-      <>
-    <Navbar />
-    <Container>
-      <SearchBar onSearch={handleSearch} />
-      <SectionCarousel title="Casas destacadas" items={casas} type="properties"/>
-      <SectionCarousel title="Apartamentos recomendados" items={apartamentos} type="properties" />
-      <SectionCarousel title="Cabañas populares" items={cabañas} type="properties" />
-    </Container>
-  </>
+    <>
+      <Navbar />
+      <Container>
 
+
+        {/* --- PROPIEDADES --- */}
+        <SectionCarousel
+          title="Casas destacadas"
+          items={casas}
+          type="properties"
+        />
+        <SectionCarousel
+          title="Apartamentos recomendados"
+          items={apartamentos}
+          type="properties"
+        />
+
+        {/* --- ACTIVIDADES --- */}
+        <SectionCarousel
+          title="Actividades populares"
+          items={actividadesPopulares}
+          type="activities"
+        />
+        <SectionCarousel
+          title="Experiencias destacadas"
+          items={actividadesDestacadas}
+          type="activities"
+        />
+
+        {/* --- SERVICIOS --- */}
+        <SectionCarousel
+          title="Servicios recomendados"
+          items={serviciosRecomendados}
+          type="services"
+        />
+        <SectionCarousel
+          title="Servicios populares"
+          items={serviciosPopulares}
+          type="services"
+        />
+
+      </Container>
+    </>
   );
 };
 

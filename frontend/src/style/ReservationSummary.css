@@ -1,0 +1,47 @@
+/* === Reservation Summary === */
+
+.summary-card {
+  background: #fff;
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+}
+
+.summary-title {
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 20px;
+}
+
+.summary-section {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  font-size: 15px;
+}
+
+.summary-section span:first-child {
+  color: #444;
+}
+
+.summary-total {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.summary-image {
+  width: 100%;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  object-fit: cover;
+  height: 160px;
+}
+
+.summary-divider {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 18px 0;
+}

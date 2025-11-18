@@ -1,10 +1,13 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react"; 
 import "../style/Navbar.css";
 import HostModal from "./Modals/HostModal";
 import LogInModal from "./Modals/LogInModal";
 import Container from "./Container";
 import { useAuth } from "../hooks/useAuth";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+
+// ICONOS
+import { FaRegStar, FaBox, FaReceipt } from "react-icons/fa";
 
 const Navbar = () => {
   const [showHostModal, setShowHostModal] = useState(false);
@@ -12,6 +15,13 @@ const Navbar = () => {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const { isAuthenticated, user, logout } = useAuth();
   const menuRef = useRef(null);
+  const location = useLocation();
+
+  const currentPath = location.pathname;
+
+  const isActive = (route) => {
+    return currentPath.startsWith(route) ? "active-nav" : "";
+  };
 
   const handleHostClick = () => {
     if (isAuthenticated) {
@@ -21,7 +31,6 @@ const Navbar = () => {
     }
   };
 
-  // Cerrar el menu al hacer clic fuera
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
@@ -37,22 +46,26 @@ const Navbar = () => {
       <Container>
         <nav className="navbar">
           <div className="nav-left">
-            <a href="/" className="logo">SecureBNB</a>
+            <Link to="/" className="logo">SecureBNB</Link>
           </div>
 
           <div className="nav-center">
-            <a href="/properties">Alojamientos</a>
-            <a href="/activities">Actividades</a>
-            <a href="/services">Servicios</a>
+            <Link className={isActive("/properties")} to="/properties">
+              Alojamientos
+            </Link>
+            <Link className={isActive("/activities")} to="/activities">
+              Actividades
+            </Link>
+            <Link className={isActive("/services")} to="/services">
+              Servicios
+            </Link>
           </div>
 
           <div className="nav-right">
-            {/* Boton Conviertete en anfitrion */}
             <button className="host-btn" onClick={handleHostClick}>
               Conviértete en anfitrión
             </button>
 
-            {/* Login / Usuario */}
             {isAuthenticated ? (
               <div className="user-menu" ref={menuRef}>
                 <button
@@ -72,17 +85,30 @@ const Navbar = () => {
                     <p className="dropdown-item disabled">
                       {user?.email || ""}
                     </p>
+
                     {user?.role === "admin" && (
                       <Link to="/admin" className="dropdown-item admin">
                         Ir a panel de administración
                       </Link>
                     )}
+
+                    {/* OPCIONES CON ICONOS */}
                     <Link to="/saved" className="dropdown-item">
+                      <FaRegStar className="icon" />
                       Mis guardados
                     </Link>
-                    <Link to="/myResources" className="dropdown-item">Mis recursos</Link>
-                    <hr />
 
+                    <Link to="/myResources" className="dropdown-item">
+                      <FaBox className="icon" />
+                      Mis recursos
+                    </Link>
+
+                    <Link to="/myBookings" className="dropdown-item">
+                      <FaReceipt className="icon" />
+                      Mis reservaciones
+                    </Link>
+
+                    <hr />
 
                     <button
                       className="dropdown-item logout"
@@ -107,7 +133,6 @@ const Navbar = () => {
           </div>
         </nav>
 
-        {/* Modales */}
         {showLogInModal && (
           <LogInModal onClose={() => setShowLogInModal(false)} />
         )}

@@ -65,7 +65,7 @@ export const approveProperty = async (req, res, next) => {
     const after = afterRows[0];
 
     await logAction(client, {
-      action: "APPROVE on PROPERTY",
+      action: "[Property]: Approval completed successfully",
       entityType: "Property",
       entityId: id,
       before: { status: before.status, approved: before.approved },
@@ -125,7 +125,7 @@ export const rejectProperty = async (req, res, next) => {
     const after = afterRows[0];
 
     await logAction(client, {
-      action: "REJECT on PROPERTY",
+      action: "[Property]: Rejection processed successfully",
       entityType: "Property",
       entityId: id,
       before: { status: before.status, approved: before.approved },
@@ -192,7 +192,7 @@ export const approveActivity = async (req, res, next) => {
     const after = afterRows[0];
 
     await logAction(client, {
-      action: "APPROVE on ACTIVITY",
+      action: "[Activity]: Approval completed successfully",
       entityType: "Activity",
       entityId: id,
       before: { status: before.status, approved: before.approved },
@@ -249,7 +249,7 @@ export const rejectActivity = async (req, res, next) => {
     const after = afterRows[0];
 
     await logAction(client, {
-      action: "REJECT on ACTIVITY",
+      action: "[Activity]: Rejection processed successfully",
       entityType: "Activity",
       entityId: id,
       before: { status: before.status, approved: before.approved },
@@ -274,7 +274,7 @@ export const getPendingServices = async (_req, res) => {
     const { rows } = await pool.query(
       `SELECT *
        FROM "Service"
-       WHERE approved = FALSE
+       WHERE approved = FALSE AND status = 'pending'
        ORDER BY "id_service" DESC`
     );
     return res.status(200).json(rows);
@@ -294,7 +294,7 @@ export const approveService = async (req, res, next) => {
     await client.query("BEGIN");
 
     const { rows: beforeRows } = await client.query(
-      'SELECT id_service, approved FROM "Service" WHERE id_service = $1 FOR UPDATE',
+      'SELECT id_service, status, approved FROM "Service" WHERE id_service = $1 FOR UPDATE',
       [id]
     );
     const before = beforeRows[0];
@@ -303,24 +303,25 @@ export const approveService = async (req, res, next) => {
       err.status = 404;
       throw err;
     }
-    if (before.approved === true) {
-      const err = new Error("Operación inválida: ya está aprobado.");
+
+    if (before.status !== "pending") {
+      const err = new Error(`Operación inválida: estado actual es '${before.status}'.`);
       err.status = 409;
       throw err;
     }
 
     const { rows: afterRows } = await client.query(
-      'UPDATE "Service" SET approved = TRUE WHERE id_service = $1 RETURNING *',
-      [id]
+      'UPDATE "Service" SET approved = TRUE, status = $2 WHERE id_service = $1 RETURNING *',
+      [id, "approved"]
     );
     const after = afterRows[0];
 
     await logAction(client, {
-      action: "APPROVE on SERVICE",
+      action: "[Service]: Approval completed successfully",
       entityType: "Service",
       entityId: id,
-      before: { approved: before.approved },
-      after: { approved: after.approved },
+      before: { status: before.status, approved: before.approved },
+      after: { status: after.status, approved: after.approved },
       reason: null,
       actor,
       at: new Date().toISOString(),
@@ -351,7 +352,7 @@ export const rejectService = async (req, res, next) => {
     await client.query("BEGIN");
 
     const { rows: beforeRows } = await client.query(
-      'SELECT id_service, approved FROM "Service" WHERE id_service = $1 FOR UPDATE',
+      'SELECT id_service, status, approved FROM "Service" WHERE id_service = $1 FOR UPDATE',
       [id]
     );
     const before = beforeRows[0];
@@ -361,18 +362,25 @@ export const rejectService = async (req, res, next) => {
       throw err;
     }
 
+    if (before.status !== "pending") {
+      const err = new Error(`Operación inválida: estado actual es '${before.status}'.`);
+      err.status = 409;
+      throw err;
+    }
+
     const { rows: afterRows } = await client.query(
-      'UPDATE "Service" SET approved = FALSE WHERE id_service = $1 RETURNING *',
-      [id]
+      'UPDATE "Service" SET approved = FALSE, status = $2 WHERE id_service = $1 RETURNING *',
+      [id, "rejected"]
     );
+
     const after = afterRows[0];
 
     await logAction(client, {
-      action: "REJECT on SERVICE",
+      action: "[Service]: Rejection processed successfully",
       entityType: "Service",
       entityId: id,
-      before: { approved: before.approved },
-      after: { approved: after.approved },
+      before: { status: before.status, approved: before.approved },
+      after: { status: after.status, approved: after.approved },
       reason,
       actor,
       at: new Date().toISOString(),
