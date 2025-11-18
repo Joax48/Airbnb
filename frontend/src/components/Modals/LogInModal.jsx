@@ -4,6 +4,8 @@ import axios from "axios";
 
 axios.defaults.withCredentials = true;
 
+const API = import.meta.env.VITE_IP_SERVER;
+
 const LogInModal = ({ onClose }) => {
     const [form, setForm] = useState({
         email: "",
@@ -32,7 +34,7 @@ const LogInModal = ({ onClose }) => {
         }
 
         try {
-            const res = await axios.post("http://localhost:4000/api/users/Login", form, { withCredentials: true });
+            const res = await axios.post(`${API}/api/users/Login`, form, { withCredentials: true });
             
             if (res.status !== 200) {
                 setIsSuccess(false);
