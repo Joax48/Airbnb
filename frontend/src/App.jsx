@@ -23,12 +23,12 @@ import ServiceDetail from "./pages/Resources/ServiceDetail";
 import ActivityDetail from "./pages/Resources/ActivityDetail";
 
 // User Pages
-import SavedPage from './pages/User/Saved.jsx'
+import SavedPage from './pages/User/saved.jsx'
 import MyResourcesPage from "./pages/User/MyResources.jsx";
 import MyBookings from './pages/User/MyBookings.jsx'
 
 // Checkout Pages
-import Checkout from './pages/Checkout/checkout.jsx';
+import Checkout from './pages/Checkout/Checkout.jsx';
 
 // Utils
 import NotFound from './pages/Extras/NotFound.jsx'
