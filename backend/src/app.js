@@ -3,6 +3,7 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import "./config/db.js";
+import cookieParser from "cookie-parser";
 
 import propertyRoutes from "./routes/property.js";
 import activityRoutes from "./routes/activity.js";
@@ -13,23 +14,48 @@ import uploadRoutes from "./routes/upload.js";
 import jwtAuthRoutes from "./routes/jwtAuth.routes.js";
 import approvalRoutes from "./routes/approval.routes.js";
 import adminUserRoutes from "./routes/admin.users.routes.js";
-import cookieParser from "cookie-parser";
 import amenitiesRoutes from "./routes/amenities.js";
 import bookingsRoutes from "./routes/bookings.js";
-
 import resourceRoutes from "./routes/resources.js";
 import paymentRoutes from "./routes/payment.js";
 
 const app = express();
 
-app.use(helmet());
-app.use(cors({ origin: "http://localhost:5173",
-credentials: true 
+app.set("trust proxy", 1);
+
+// Necesario detrás de Apache para confiar en X-Forwarded-Proto
+app.set("trust proxy", 1);
+
+// Forzar Express a reconocer HTTPS real
+app.use((req, res, next) => {
+  if (req.headers['x-forwarded-proto'] === 'https') {
+    req.secure = true;
+  }
+  next();
+});
+
+// (Opcional pero recomendado) Redirigir HTTP a HTTPS
+app.use((req, res, next) => {
+  if (!req.secure && req.headers['x-forwarded-proto'] !== 'https') {
+    return res.redirect("https://" + req.headers.host + req.url);
+  }
+  next();
+});
+
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "http://172.24.131.71:5173",
+    "https://securebnb.com"       // Producción
+  ],
+  credentials: true
 }));
+
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(cookieParser());
 
+// Rutas
 app.use("/api/properties", propertyRoutes);
 app.use("/api/activities", activityRoutes);
 app.use("/api/services", serviceRoutes);
@@ -49,6 +75,3 @@ app.get("/", (req, res) => {
 });
 
 export default app;
-
-
-
