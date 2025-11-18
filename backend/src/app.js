@@ -23,25 +23,6 @@ const app = express();
 
 app.set("trust proxy", 1);
 
-// Necesario detrás de Apache para confiar en X-Forwarded-Proto
-app.set("trust proxy", 1);
-
-// Forzar Express a reconocer HTTPS real
-app.use((req, res, next) => {
-  if (req.headers['x-forwarded-proto'] === 'https') {
-    req.secure = true;
-  }
-  next();
-});
-
-// (Opcional pero recomendado) Redirigir HTTP a HTTPS
-app.use((req, res, next) => {
-  if (!req.secure && req.headers['x-forwarded-proto'] !== 'https') {
-    return res.redirect("https://" + req.headers.host + req.url);
-  }
-  next();
-});
-
 app.use(cors({
   origin: [
     "http://localhost:5173",
