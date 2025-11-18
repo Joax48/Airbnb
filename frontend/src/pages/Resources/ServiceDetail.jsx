@@ -45,6 +45,31 @@ const ServiceDetail = () => {
     await toggleSave("services", service.id_service);
     loadSaved();
   };
+  const handleReserve = () => {
+  if (!isAuthenticated) {
+    setShowLogin(true);
+    return;
+  }
+
+  if (!requestLocation.trim() || !requestDate.trim()) {
+    alert("Debe completar la ubicación y la fecha del servicio.");
+    return;
+  }
+
+  navigate(`/checkout/services/${id}`, {
+    state: {
+      startDate: requestDate,
+      endDate: requestDate,
+      nights: 1,
+      price: service.price,
+      total: service.price,
+      title: service.name,
+      image: service.image_url,
+      location: requestLocation,
+    },
+  });
+};
+
 
   const formatPrice = (p) => "₡" + Number(p).toLocaleString("es-CR");
 
@@ -137,25 +162,10 @@ const ServiceDetail = () => {
                     </div>
 
                     {/* Reservar */}
-                    <button
-                      className="reserve-btn large"
-                      onClick={() => {
-                        navigate(`/checkout/services/${id}`, {
-                          state: {
-                            startDate: requestDate,
-                            endDate: requestDate,
-                            nights: 1,
-                            price: service.price,
-                            total: service.price,
-                            title: service.name,
-                            image: service.image_url,
-                            location: requestLocation
-                          }
-                        });
-                      }}
-                    >
-                      Reservar
-                    </button>
+                <button className="reserve-btn large" onClick={handleReserve}>
+                  Reservar
+                </button>
+
 
                   </div>
                 ) : (
